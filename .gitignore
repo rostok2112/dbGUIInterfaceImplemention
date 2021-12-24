@@ -1,0 +1,11 @@
+cat .gitignore
+*.[oa]
+#*.dll
+*.exe
+#*.so
+#bin/
+#share/
+#redist/
+#obj/
+#lib/
+#*~
