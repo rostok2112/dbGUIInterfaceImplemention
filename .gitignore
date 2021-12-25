@@ -1,4 +1,6 @@
-cat .gitignore
+dbGUIInterfaceImplemention.cbp
+dbGUIInterfaceImplemention.depend
+dbGUIInterfaceImplemention.layout
 *.[oa]
 #*.dll
 *.exe
