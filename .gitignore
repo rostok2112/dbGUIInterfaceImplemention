@@ -3,7 +3,7 @@ cat .gitignore
 #*.dll
 *.exe
 #*.so
-#bin/
+bin/
 #share/
 #redist/
 #obj/

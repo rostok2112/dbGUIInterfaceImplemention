@@ -77,7 +77,7 @@ bool selectDB(guchar nameTable[])
 {
     guchar * query =  g_strdup_printf("SELECT * FROM `%s`",
                                       nameTable);
-
+    printf("%s\n", g_locale_from_utf8(query, -1, NULL, NULL, NULL));
     if (mysql_query(con, query)) {
         fprintf(stderr,  "%s\n",   mysql_error(con));
         free(query);
