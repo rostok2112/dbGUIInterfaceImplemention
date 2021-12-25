@@ -112,7 +112,7 @@ CREATE TABLE `процессорна архітектура` (
   `многопроцессорність` tinyint(1) NOT NULL,
   `наявність L3 кешу` tinyint(1) NOT NULL,
   `наявність L2 кешу` tinyint(1) NOT NULL,
-  `Багаточіплетність:` tinyint(1) NOT NULL
+  `багаточіплетність` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 

@@ -9,10 +9,10 @@ bool dropUserDBMS_DB(guchar login[])
 
     if (mysql_query(con, query)) {
         fprintf(stderr,  "%s\n",   mysql_error(con));
-        free(query);
+        g_free(query);
         return false;
     } else {
-        free(query);
+        g_free(query);
         return true;
     }
 
@@ -26,10 +26,10 @@ bool grantAdminDBMS_DB(guchar login[])
 
     if (mysql_query(con, query)) {
         fprintf(stderr,  "%s\n",   mysql_error(con));
-        free(query);
+        g_free(query);
         return false;
     } else {
-        free(query);
+        g_free(query);
         return true;
     }
 
@@ -45,11 +45,11 @@ bool createUserDBMS_DB(guchar login[], guchar passwrd[])
 
     if (mysql_query(con, query)) {
         fprintf(stderr,  "%s\n",   mysql_error(con));
-        free(query);
+        g_free(query);
         return false;
     } else {
         printf("Norm");
-        free(query);
+        g_free(query);
         return true;
     }
 }
@@ -64,10 +64,10 @@ bool linkDB(guchar nameTableParent[], guchar nameTableChild[], guchar valueField
 
     if (mysql_query(con, query)) {
         fprintf(stderr,  "%s\n",   mysql_error(con));
-        free(query);
+        g_free(query);
         return false;
     } else {
-        free(query);
+        g_free(query);
         return true;
     }
 }
@@ -80,14 +80,14 @@ bool selectDB(guchar nameTable[])
     printf("%s\n", g_locale_from_utf8(query, -1, NULL, NULL, NULL));
     if (mysql_query(con, query)) {
         fprintf(stderr,  "%s\n",   mysql_error(con));
-        free(query);
+        g_free(query);
         return false;
     } else if(!(result = mysql_store_result(con))) {
         fprintf(stderr,  "%s\n",   mysql_error(con));
-        free(query);
+        g_free(query);
         return false;
     } else {
-        free(query);
+        g_free(query);
         return true;
     }
 
@@ -101,10 +101,10 @@ bool updateDB(guchar nameTable[], guchar setValue [], guchar fieldName [], gucha
 
     if (mysql_query(con, query)) {
         fprintf(stderr,  "%s\n",   mysql_error(con));
-        free(query);
+        g_free(query);
         return false;
     } else {
-        free(query);
+        g_free(query);
         return true;
     }
 
@@ -119,10 +119,10 @@ bool deleteDB(guchar nameTable[],  guchar fieldName [], guchar fieldValue[])
 
     if (mysql_query(con, query)) {
         fprintf(stderr,  "%s\n",   mysql_error(con));
-        free(query);
+        g_free(query);
         return false;
     } else {
-        free(query);
+        g_free(query);
         return true;
     }
 }
@@ -138,14 +138,14 @@ bool showTablesLikeNotLikeDB(guchar pattern[], bool like)
 
     if (mysql_query(con, query)) {
         fprintf(stderr,  "%s\n",   mysql_error(con));
-        free(query);
+        g_free(query);
         return false;
     } else if(!(result = mysql_store_result(con))) {
         fprintf(stderr,  "%s\n",   mysql_error(con));
-        free(query);
+        g_free(query);
         return false;
     } else {
-        free(query);
+        g_free(query);
         return true;
     }
 
@@ -163,12 +163,12 @@ bool insertDB(guchar nameTable [], guchar values[])
 
     if (mysql_query(con, query)) {
         fprintf(stderr,  "%s\n",   mysql_error(con));
-        free(query);
+        g_free(query);
         return false;
     }
 
     else {
-        free(query);
+        g_free(query);
         return true;
     }
 
@@ -185,16 +185,16 @@ bool selectTableDB(guchar  nameTable[], bool isWithChilds, guchar ** res)
         printf("%s\n", g_locale_from_utf8(query, -1, NULL, NULL, NULL));
         if (mysql_query(con, query)) {
             fprintf(stderr,  "%s\n",   mysql_error(con));
-            free(query);
+            g_free(query);
             return false;
         }
 
         else if(!(result = mysql_store_result(con))) {
             fprintf(stderr,  "%s\n",   mysql_error(con));
-            free(query);
+            g_free(query);
             return false;
         } else {
-            free(query);
+            g_free(query);
             return true;
         }
     } else {
@@ -204,7 +204,7 @@ bool selectTableDB(guchar  nameTable[], bool isWithChilds, guchar ** res)
 
         showTablesLikeNotLikeDB(query, true); // returns names of links tables of parent table
 
-        free(query);
+        g_free(query);
 
         MYSQL_RES * res_buf  = result;
         guint countLinksTable = mysql_num_rows(res_buf);
@@ -228,7 +228,7 @@ bool selectTableDB(guchar  nameTable[], bool isWithChilds, guchar ** res)
             if (mysql_query(con, query))
             {
                 fprintf(stderr,  "%s\n",   mysql_error(con));
-                free(query);
+                g_free(query);
                 return false;
             }
 
@@ -247,7 +247,7 @@ bool selectTableDB(guchar  nameTable[], bool isWithChilds, guchar ** res)
             }
 
             mysql_free_result(result);
-            free(query);
+            g_free(query);
 
             guchar * bufLn = NULL;
 
@@ -267,14 +267,14 @@ bool selectTableDB(guchar  nameTable[], bool isWithChilds, guchar ** res)
                             (*res) = g_strdup_printf("%s%s", (*res), field->name);
                         else
                             (*res) = g_strdup_printf("%s %s", (*res), field->name);
-                        free(bufLn);
+                        g_free(bufLn);
                     } else (*res) = g_strdup(field->name);
 
 
                 }
                 bufLn = (*res);
                 (*res) = g_strdup_printf("%s\n", (*res));
-                free(bufLn);
+                g_free(bufLn);
 
 
                 int num_fields = mysql_num_fields(result);
@@ -286,17 +286,17 @@ bool selectTableDB(guchar  nameTable[], bool isWithChilds, guchar ** res)
                             (*res) = g_strdup_printf("%s%s", (*res), row[i] ? row[i] : "NULL");
                         else
                             (*res) = g_strdup_printf("%s %s", (*res), row[i] ? row[i] : "NULL");
-                        free(bufLn);
+                        g_free(bufLn);
 
                     }
                     bufLn = (*res);
                     (*res) = g_strdup_printf("%s\n", (*res));
-                    free(bufLn);
+                    g_free(bufLn);
 
                 }
 
                 mysql_free_result(result);
-                free(query);
+                g_free(query);
 
                 query = g_strdup_printf("SELECT * FROM `%s` INNER JOIN `%s` ON `%s`.`id` = `%s`.`id_%s` WHERE `%s`.`id_%s` = %d",
                                          buf_2,  buf_1, buf_2, buf_1, buf_2, buf_1, nameTable, parentIDs[i]);
@@ -311,13 +311,13 @@ bool selectTableDB(guchar  nameTable[], bool isWithChilds, guchar ** res)
                             (*res) = g_strdup_printf("%s%s", (*res), field->name);
                         else
                             (*res) = g_strdup_printf("%s %s", (*res), field->name);
-                        free(bufLn);
+                        g_free(bufLn);
                     } else (*res) = g_strdup(field->name);
 
                 }
                 bufLn = (*res);
                 (*res) = g_strdup_printf("%s\n", (*res));
-                free(bufLn);
+                g_free(bufLn);
 
 
                 num_fields = mysql_num_fields(result);
@@ -329,19 +329,19 @@ bool selectTableDB(guchar  nameTable[], bool isWithChilds, guchar ** res)
                             (*res) = g_strdup_printf("%s%s", (*res), row[i] ? row[i] : "NULL");
                         else
                             (*res) = g_strdup_printf("%s %s", (*res), row[i] ? row[i] : "NULL");
-                        free(bufLn);
+                        g_free(bufLn);
 
                     }
                     bufLn = (*res);
                     (*res) = g_strdup_printf("%s\n", (*res));
-                    free(bufLn);
+                    g_free(bufLn);
                 }
 
                 bufLn = (*res);
                 (*res) = g_strdup_printf("%s\n", (*res));
-                free(bufLn);
+                g_free(bufLn);
 
-                free(query);
+                g_free(query);
             }
         }
         mysql_free_result(res_buf);
@@ -361,12 +361,12 @@ bool createNewUserDB(guchar  login[], guchar passwrd[], bool isAdmin)
     printf("%s\n", g_locale_from_utf8(query, -1, NULL, NULL, NULL));
     if (mysql_query(con, query)) {
         fprintf(stderr,  "%s\n",   mysql_error(con));
-        free(query);
+        g_free(query);
         return false;
     }
 
     else {
-        free(query);
+        g_free(query);
         return true;
     }
 
@@ -387,10 +387,10 @@ bool checkUserDB(guchar  login[], guchar passwrd[])
 
     else if(!(result = mysql_store_result(con))) {
         fprintf(stderr,  "%s\n",   mysql_error(con));
-        free(query);
+        g_free(query);
         return false;
     } else {
-        free(query);
+        g_free(query);
         return true;
 
     }

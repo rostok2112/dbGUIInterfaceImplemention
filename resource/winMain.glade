@@ -12,253 +12,6 @@
     <property name="step-increment">1024</property>
     <property name="page-increment">1024</property>
   </object>
-  <object class="GtkDialog" id="dlgUpdateArch">
-    <property name="can-focus">False</property>
-    <property name="title" translatable="yes">Добавление архитектуры</property>
-    <property name="modal">True</property>
-    <property name="type-hint">dialog</property>
-    <child internal-child="vbox">
-      <object class="GtkBox">
-        <property name="can-focus">False</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">2</property>
-        <child internal-child="action_area">
-          <object class="GtkButtonBox">
-            <property name="can-focus">False</property>
-            <property name="layout-style">end</property>
-            <child>
-              <object class="GtkButton" id="btnOk12">
-                <property name="label" translatable="yes">Ok</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-                <signal name="clicked" handler="onOkBtnUpdateArchClicked" object="dlgUpdateArch" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="btnCancel13">
-                <property name="label" translatable="yes">Закрыть</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-                <signal name="clicked" handler="onCancelBtn1Clicked" object="dlgUpdateArch" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="orientation">vertical</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Виберіть сімейство для редагування:</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkComboBoxText">
-                <property name="name">combo_</property>
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="active">0</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Назва процессорної архітектури:</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkEntry">
-                <property name="name">назва</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">3</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Розрядність:</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">4</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSpinButton">
-                <property name="name">розрядність</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="text" translatable="yes">0</property>
-                <property name="adjustment">adjustment1</property>
-                <property name="climb-rate">0.14999999999999999</property>
-                <property name="snap-to-ticks">True</property>
-                <property name="numeric">True</property>
-                <property name="update-policy">if-valid</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">5</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Максимальна адреса віртуальної пам'яті:</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">6</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSpinButton">
-                <property name="name">максимальна адреса віртуальної пам'яті</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="text" translatable="yes">0</property>
-                <property name="adjustment">adjustment2</property>
-                <property name="climb-rate">999</property>
-                <property name="snap-to-ticks">True</property>
-                <property name="numeric">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">7</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkCheckButton">
-                <property name="label" translatable="yes">Многопоточна ?</property>
-                <property name="name">многопоточність</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">False</property>
-                <property name="draw-indicator">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">8</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkCheckButton">
-                <property name="label" translatable="yes">Многопроцессорна ?</property>
-                <property name="name">многопроцессорність</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">False</property>
-                <property name="draw-indicator">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">9</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkCheckButton">
-                <property name="label" translatable="yes">L3 кеш наявний ?</property>
-                <property name="name">наявність L3 кешу</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">False</property>
-                <property name="draw-indicator">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">10</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkCheckButton">
-                <property name="label" translatable="yes">L2 кеш наявний ?</property>
-                <property name="name">наявність L2 кешу</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">False</property>
-                <property name="draw-indicator">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">11</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkCheckButton">
-                <property name="label" translatable="yes">Багаточіплетна ?</property>
-                <property name="name">Багаточіплетність:</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">False</property>
-                <property name="draw-indicator">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">12</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-  </object>
   <object class="GtkAdjustment" id="adjustment3">
     <property name="upper">100</property>
     <property name="step-increment">1</property>
@@ -266,7 +19,7 @@
   </object>
   <object class="GtkDialog" id="dlgDelete">
     <property name="can-focus">False</property>
-    <property name="title" translatable="yes">Удаление</property>
+    <property name="title" translatable="yes">Удаление записей</property>
     <property name="modal">True</property>
     <property name="type-hint">dialog</property>
     <child internal-child="vbox">
@@ -356,7 +109,7 @@
   <object class="GtkDialog" id="dlgInsert">
     <property name="name">mmmm</property>
     <property name="can-focus">False</property>
-    <property name="title" translatable="yes">Добавление связей</property>
+    <property name="title" translatable="yes">Добавление записей</property>
     <property name="modal">True</property>
     <property name="type-hint">dialog</property>
     <child internal-child="vbox">
@@ -447,7 +200,7 @@
   <object class="GtkDialog" id="dlgLink">
     <property name="name">mmmm</property>
     <property name="can-focus">False</property>
-    <property name="title" translatable="yes">Добавление связей</property>
+    <property name="title" translatable="yes">Связывание записей</property>
     <property name="modal">True</property>
     <property name="type-hint">dialog</property>
     <child internal-child="vbox">
@@ -762,10 +515,9 @@
       </object>
     </child>
   </object>
-  <object class="GtkDialog" id="dlgTest">
-    <property name="name">mmmm</property>
+  <object class="GtkDialog" id="dlgUpdate">
     <property name="can-focus">False</property>
-    <property name="title" translatable="yes">Добавление связей</property>
+    <property name="title" translatable="yes">Редактирование записей</property>
     <property name="modal">True</property>
     <property name="type-hint">dialog</property>
     <child internal-child="vbox">
@@ -784,7 +536,7 @@
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <property name="double-buffered">False</property>
-                <signal name="clicked" handler="onOkTestClicked" object="dlgTest" swapped="no"/>
+                <signal name="clicked" handler="onOkBtnUpdateClicked" object="dlgUpdate" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -798,7 +550,7 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
-                <signal name="clicked" handler="onCancelBtn1Clicked" object="dlgTest" swapped="no"/>
+                <signal name="clicked" handler="onCancelBtn1Clicked" object="dlgUpdate" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -853,517 +605,6 @@
       </object>
     </child>
   </object>
-  <object class="GtkDialog" id="dlgUpdate">
-    <property name="can-focus">False</property>
-    <property name="title" translatable="yes">Редактирование</property>
-    <property name="modal">True</property>
-    <property name="type-hint">dialog</property>
-    <child internal-child="vbox">
-      <object class="GtkBox">
-        <property name="can-focus">False</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">2</property>
-        <child internal-child="action_area">
-          <object class="GtkButtonBox">
-            <property name="can-focus">False</property>
-            <property name="layout-style">end</property>
-            <child>
-              <object class="GtkButton" id="btnOk8">
-                <property name="label" translatable="yes">Ok</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-                <signal name="clicked" handler="onOkBtnUpdateClicked" object="dlgUpdate" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="btnCancel9">
-                <property name="label" translatable="yes">Закрыть</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-                <signal name="clicked" handler="onCancelBtn1Clicked" object="dlgUpdate" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButtonBox">
-            <property name="name">radioBtns</property>
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="halign">start</property>
-            <property name="orientation">vertical</property>
-            <property name="layout-style">center</property>
-            <child>
-              <object class="GtkRadioButton" id="radioButtonDirectory1">
-                <property name="label" translatable="yes">довідник архітектур пк</property>
-                <property name="name">dlgUpdateDirectory</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">False</property>
-                <property name="halign">start</property>
-                <property name="draw-indicator">True</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkRadioButton" id="radioButtonCompany1">
-                <property name="label" translatable="yes">компанія-розробник архітектури</property>
-                <property name="name">dlgUpdateCompany</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">False</property>
-                <property name="draw-indicator">True</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkRadioButton" id="radioButtonFamily1">
-                <property name="label" translatable="yes">сімейство архітектур</property>
-                <property name="name">dlgUpdateFamily</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">False</property>
-                <property name="draw-indicator">True</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkRadioButton" id="radioButtonArch1">
-                <property name="label" translatable="yes">процессорна архітектура</property>
-                <property name="name">dlgUpdateArch</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">False</property>
-                <property name="draw-indicator">True</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">3</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-  </object>
-  <object class="GtkDialog" id="dlgUpdateCompany">
-    <property name="can-focus">False</property>
-    <property name="title" translatable="yes">Добавление компании</property>
-    <property name="modal">True</property>
-    <property name="type-hint">dialog</property>
-    <child internal-child="vbox">
-      <object class="GtkBox">
-        <property name="can-focus">False</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">2</property>
-        <child internal-child="action_area">
-          <object class="GtkButtonBox">
-            <property name="can-focus">False</property>
-            <property name="layout-style">end</property>
-            <child>
-              <object class="GtkButton" id="btnOk10">
-                <property name="label" translatable="yes">Ok</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-                <signal name="clicked" handler="onOkBtnUpdateCompanyClicked" object="dlgUpdateCompany" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="btnCancel11">
-                <property name="label" translatable="yes">Закрыть</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-                <signal name="clicked" handler="onCancelBtn1Clicked" object="dlgUpdateCompany" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="orientation">vertical</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Виберіть компанію для редагування:</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkComboBoxText">
-                <property name="name">combo_</property>
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="active">0</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Нова назва компанії-розробника архітектури</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkEntry">
-                <property name="name">назва</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">3</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-  </object>
-  <object class="GtkDialog" id="dlgUpdateDirectory">
-    <property name="can-focus">False</property>
-    <property name="title" translatable="yes">Добавление справочника</property>
-    <property name="modal">True</property>
-    <property name="type-hint">dialog</property>
-    <child internal-child="vbox">
-      <object class="GtkBox">
-        <property name="can-focus">False</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">2</property>
-        <child internal-child="action_area">
-          <object class="GtkButtonBox">
-            <property name="can-focus">False</property>
-            <property name="layout-style">end</property>
-            <child>
-              <object class="GtkButton" id="btnOk9">
-                <property name="label" translatable="yes">Ok</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-                <signal name="clicked" handler="onOkBtnUpdateDirectoryClicked" object="dlgUpdateDirectory" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="btnCancel10">
-                <property name="label" translatable="yes">Закрыть</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-                <signal name="clicked" handler="onCancelBtn1Clicked" object="dlgUpdateDirectory" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="orientation">vertical</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Виберіть довідник для редагування:</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkComboBoxText">
-                <property name="name">combo_</property>
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="active">0</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Нова назва  довідника архітектур ПК:</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkEntry">
-                <property name="name">назва</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">3</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-  </object>
-  <object class="GtkDialog" id="dlgUpdateFamily">
-    <property name="can-focus">False</property>
-    <property name="title" translatable="yes">Добавление семейства</property>
-    <property name="modal">True</property>
-    <property name="type-hint">dialog</property>
-    <child internal-child="vbox">
-      <object class="GtkBox">
-        <property name="can-focus">False</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">2</property>
-        <child internal-child="action_area">
-          <object class="GtkButtonBox">
-            <property name="can-focus">False</property>
-            <property name="layout-style">end</property>
-            <child>
-              <object class="GtkButton" id="btnOk11">
-                <property name="label" translatable="yes">Ok</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-                <signal name="clicked" handler="onOkBtnUpdateFamilyClicked" object="dlgUpdateFamily" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="btnCancel12">
-                <property name="label" translatable="yes">Закрыть</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-                <signal name="clicked" handler="onCancelBtn1Clicked" object="dlgUpdateFamily" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="orientation">vertical</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Виберіть сімейство для редагування:</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkComboBoxText">
-                <property name="name">combo_</property>
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="active">0</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Нова назва сімейства архітектур:</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkEntry">
-                <property name="name">назва</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">3</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Новий порядок слідування байтів:</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">4</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkComboBoxText">
-                <property name="name">порядок слідування байтів</property>
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="active">0</property>
-                <items>
-                  <item translatable="yes">little-endian</item>
-                  <item translatable="yes">big-endian</item>
-                </items>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">5</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkCheckButton">
-                <property name="label" translatable="yes">Мультискалярна ?</property>
-                <property name="name">скалярність</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">False</property>
-                <property name="draw-indicator">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">6</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-  </object>
   <object class="GtkImage" id="image1">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -1380,11 +621,6 @@
     <property name="stock">gtk-missing-image</property>
   </object>
   <object class="GtkImage" id="image3">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="stock">gtk-missing-image</property>
-  </object>
-  <object class="GtkImage" id="image4">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="stock">gtk-missing-image</property>
@@ -1629,12 +865,12 @@
                     </child>
                     <child>
                       <object class="GtkImageMenuItem">
-                        <property name="label">Обновить</property>
+                        <property name="label">Редактировать</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="image">image1</property>
                         <property name="use-stock">False</property>
-                        <signal name="activate" handler="onMenuItemClicked" object="dlgUpdate" swapped="no"/>
+                        <signal name="activate" handler="onMenuItemUpdateClicked" object="dlgUpdate" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -1655,16 +891,6 @@
                         <property name="image">image3</property>
                         <property name="use-stock">False</property>
                         <signal name="activate" handler="onMenuItemPrivilegeClicked" object="dlgPrivilege" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkImageMenuItem">
-                        <property name="label">Test</property>
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="image">image4</property>
-                        <property name="use-stock">False</property>
-                        <signal name="activate" handler="onTest" object="dlgTest" swapped="no"/>
                       </object>
                     </child>
                   </object>

@@ -1,14 +1,314 @@
 #include "../include/types.h"
+//gtk_combo_box_text_remove_all(GTK_COMBO_BOX_TEXT(listChilds->data));
 
-G_MODULE_EXPORT void onTest(GtkMenuItem * menuItem, GtkDialog * dlg){
+G_MODULE_EXPORT void onCancelBtnUpdateUpdateClicked(GtkButton * btn, GtkDialog * dlg){
+    g_free(g_object_get_data(dlg, "tableName"));
+    gtk_widget_destroy(GTK_WIDGET(dlg));
+    }
+
+G_MODULE_EXPORT void onOkBtnUpdateUpdateClicked(GtkButton * btn, GtkDialog * dlg){
+
+ GtkBox  * boxMain  = GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)));
+
+    selectDB(g_object_get_data(dlg, "tableName"));
+
+    MYSQL_FIELD  *field = NULL;
+    guchar *setValue = NULL, *buf_ptr  = NULL;
+    GList *listChilds = gtk_container_get_children(GTK_CONTAINER(boxMain));
+
+
+    while(listChilds && !GTK_IS_COMBO_BOX_TEXT(listChilds->data), g_strcmp0(gtk_widget_get_name(GTK_WIDGET(listChilds->data)), "ComboRecords"))
+            listChilds = listChilds->next;
+
+    guchar * buf1 = gtk_combo_box_text_get_active_text(listChilds->data);
+    buf_ptr = strchr(buf1, ' ') + 1;
+    guchar * fieldName = g_strndup(buf1, strchr(buf1, ':') - (char *) buf1);
+    guchar * fieldValue = g_strndup(buf_ptr, strchr(buf_ptr, ' ') - (char *) buf_ptr );
+    setValue = g_strdup_printf("`%s` = '%s'", fieldName, fieldValue);
+
+    bool i = false;
+    while((field =  mysql_fetch_field(result))) {
+
+        switch(field->type) {
+            case FIELD_TYPE_DECIMAL:
+                ;
+            case FIELD_TYPE_FLOAT:
+                ;
+            case FIELD_TYPE_DOUBLE:
+                ;
+            case FIELD_TYPE_SHORT:
+                ;
+            case FIELD_TYPE_INT24:
+                ;
+            case FIELD_TYPE_LONG:
+                if(GTK_IS_SPIN_BUTTON(listChilds->data) && i)
+                    listChilds = listChilds->next;
+                while(!GTK_IS_SPIN_BUTTON(listChilds->data))
+                    listChilds = listChilds->next;
+
+                if(listChilds){
+                    buf_ptr = setValue;
+                    setValue = g_strdup_printf("%s, `%s` =  '%g'", setValue,  field->name, gtk_spin_button_get_value(listChilds->data));
+                    g_free(buf_ptr);
+                }
+                break;
+            case FIELD_TYPE_TINY:
+                if(field->length == 1){
+                    if(GTK_IS_CHECK_BUTTON(listChilds->data) && i)
+                        listChilds = listChilds->next;
+                    while(!GTK_IS_CHECK_BUTTON(listChilds->data))
+                        listChilds = listChilds->next;
+
+                    if(listChilds){
+                        buf_ptr = setValue;
+                        setValue = g_strdup_printf("%s, `%s` = '%d'", setValue, field->name, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(listChilds->data)));
+                        g_free(buf_ptr);
+                    }
+
+                }
+
+                else {
+                    if(GTK_IS_SPIN_BUTTON(listChilds->data) && i)
+                        listChilds = listChilds->next;
+                    while(!GTK_IS_SPIN_BUTTON(listChilds->data))
+                        listChilds = listChilds->next;
+
+                    if(listChilds){
+                        buf_ptr = setValue;
+                        setValue = g_strdup_printf("%s, `%s` = '%g'", setValue, field->name, gtk_spin_button_get_value(listChilds->data));
+                        g_free(buf_ptr);
+                    }
+                }
+                break;
+            case FIELD_TYPE_LONGLONG:
+                if(field->flags & PRI_KEY_FLAG);
+                else {
+                   if(GTK_IS_SPIN_BUTTON(listChilds->data) && i)
+                    listChilds = listChilds->next;
+                    while(!GTK_IS_SPIN_BUTTON(listChilds->data))
+                        listChilds = listChilds->next;
+
+                    if(listChilds){
+                        buf_ptr = setValue;
+                        setValue = g_strdup_printf("%s, `%s` = '%g'", setValue, field->name, gtk_spin_button_get_value(listChilds->data));
+                        g_free(buf_ptr);
+
+                    }
+                }
+                break;
+            case FIELD_TYPE_STRING - 1:
+                ;
+            case FIELD_TYPE_STRING:
+
+                if((GTK_IS_ENTRY(listChilds->data)) && i)
+                   listChilds = listChilds->next;
+                while(!GTK_IS_ENTRY(listChilds->data))
+                    listChilds = listChilds->next;
+
+                if(listChilds){
+                    buf_ptr = setValue;
+                    setValue = g_strdup_printf("%s, `%s` = '%s'", setValue, field->name, gtk_entry_get_text(listChilds->data));
+                    g_free(buf_ptr);
+                }
+                break;
+            default:
+                ;
+        }
+        if(!i)
+            i = true;
+    }
+    mysql_free_result(result);
+    updateDB(g_object_get_data(dlg, "tableName"), setValue, fieldName, fieldValue);
+    g_free(setValue);
+    g_free(g_object_get_data(dlg, "tableName"));
+    mysql_free_result(result);
+    gtk_widget_destroy(GTK_WIDGET(dlg));
 
 }
-G_MODULE_EXPORT void onCancelInsertInsertClicked(GtkButton * btn, GtkDialog * dlg){
+
+G_MODULE_EXPORT void onOkBtnUpdateClicked(GtkMenuItem * menuItem, GtkDialog * parentDlg){
+
+
+GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(parentDlg)))));
+
+    guchar *  tableName = NULL;
+    guint  fieldCount = 0;
+    while(listChilds && !GTK_IS_BOX(listChilds->data) )
+        listChilds = listChilds->next;
+    if(listChilds) {
+
+        listChilds = gtk_container_get_children( GTK_CONTAINER(GTK_BOX(listChilds->data)));
+        while(listChilds && !GTK_IS_COMBO_BOX_TEXT(listChilds->data) )
+            listChilds = listChilds->next;
+        if(listChilds) {
+            tableName = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(listChilds->data));
+
+        }
+    }
+
+    selectDB(tableName);
+    fieldCount = mysql_num_fields(result);
+
+    guchar * str_buf1 = g_strdup_printf("Редактирование: %s", tableName);
+    guchar * str_buf2 = NULL;
+
+    GtkDialog * dlg = gtk_dialog_new_with_buttons(str_buf1,
+                      parentDlg,(GtkDialogFlags)(GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT),
+                      "Ok", GTK_RESPONSE_ACCEPT,
+                      "Cancel", GTK_RESPONSE_REJECT,
+                      NULL);
+
+    g_free(str_buf1);
+    g_object_set_data(dlg, "tableName", tableName);
+    GtkBox  *  boxMain  = GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)));
+
+    MYSQL_FIELD  * field = NULL;
+
+    GtkWidget * buf = NULL;
+
+    str_buf1 = g_strconcat("Запис", ":", NULL);
+    gtk_container_add(GTK_CONTAINER(boxMain), gtk_label_new(str_buf1));
+    buf = gtk_combo_box_text_new();
+
+    gtk_widget_set_name(buf, "ComboRecords");
+    gtk_container_add(GTK_CONTAINER(boxMain), buf);
+
+    g_free(str_buf1);
+    str_buf1 = NULL;
+
+    guint countRecords = mysql_num_rows(result);
+
+    for(int cntRow = 0; cntRow < countRecords; cntRow++)
+    {
+
+        MYSQL_ROW row_Record = mysql_fetch_row(result);
+        guint countFields = mysql_num_fields(result);
+
+        MYSQL_FIELD * record_Fields = mysql_fetch_fields(result);
+        for(int cntField = 0; cntField < countFields; cntField++) {
+
+            str_buf2 = str_buf1;
+            str_buf1 = g_strdup_printf("%s%s: %s ", str_buf1 ? str_buf1 : "", record_Fields[cntField].name, row_Record[cntField]);
+            g_free(str_buf2);
+        }
+        gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(buf), str_buf1);
+        g_free(str_buf1);
+        str_buf1 = NULL;
+    }
+    gtk_combo_box_set_active(buf, 0);
+    buf  = NULL;
+
+    while((field =  mysql_fetch_field(result))) {
+        GtkAdjustment *adjustment;
+
+        switch(field->type) {
+            case FIELD_TYPE_DECIMAL:
+                ;
+            case FIELD_TYPE_FLOAT:
+                ;
+            case FIELD_TYPE_DOUBLE:
+                ;
+            case FIELD_TYPE_SHORT:
+                ;
+            case FIELD_TYPE_INT24:
+                ;
+            case FIELD_TYPE_LONG:
+                str_buf1 = g_strconcat(field->name, ":", NULL);
+                gtk_container_add(GTK_CONTAINER(boxMain), gtk_label_new(str_buf1));
+                adjustment = gtk_adjustment_new (0.0, 0.0, pow(10, field->length + 1) - 1, 1.0, 5.0, 0.0);
+                buf = gtk_spin_button_new (adjustment, 1.0, 0);
+                gtk_spin_button_set_numeric(buf, true);
+                g_free(str_buf1);
+                break;
+            case FIELD_TYPE_TINY:
+                if(field->length == 1)
+                    buf =  gtk_check_button_new_with_label(field->name);
+                else {
+                    str_buf1 = g_strconcat(field->name, ":", NULL);
+                    gtk_container_add(GTK_CONTAINER(boxMain), gtk_label_new(str_buf1));
+                    adjustment = gtk_adjustment_new (0.0, 0.0, pow(10, field->length + 1) - 1, 1.0, 5.0, 0.0);
+                    buf = gtk_spin_button_new (adjustment, 1.0, 0);
+                    gtk_spin_button_set_numeric(buf, true);
+                    g_free(str_buf1);
+                }
+                break;
+            case FIELD_TYPE_LONGLONG:
+                if(field->flags & PRI_KEY_FLAG)
+                    buf = NULL;
+                else {
+                    str_buf1 = g_strconcat(field->name, ":", NULL);
+                    gtk_container_add(GTK_CONTAINER(boxMain), gtk_label_new(str_buf1));
+                    adjustment = gtk_adjustment_new (0.0, 0.0, pow(10, field->length + 1) - 1, 1.0, 5.0, 0.0);
+                    buf = gtk_spin_button_new (adjustment, 1.0, 0);
+                    gtk_spin_button_set_numeric(buf, true);
+                    g_free(str_buf1);
+                }
+                break;
+            case FIELD_TYPE_STRING - 1:
+                ;
+            case FIELD_TYPE_STRING:
+                str_buf1 = g_strconcat(field->name, ":", NULL);
+                gtk_container_add(GTK_CONTAINER(boxMain), gtk_label_new(str_buf1));
+                buf = gtk_entry_new();
+                g_free(str_buf1);
+                break;
+            default:
+                buf = NULL;
+                ;
+        }
+
+        buf ? gtk_container_add(GTK_CONTAINER(boxMain),  buf) : NULL;
+    }
+
+    listChilds  =  gtk_container_get_children(GTK_CONTAINER(GTK_BUTTON_BOX(gtk_dialog_get_action_area(dlg))));
+    if(GTK_IS_BUTTON(listChilds->data) && !g_strcmp0(gtk_label_get_text(gtk_bin_get_child (listChilds->data)), "Ok"))
+        g_signal_connect(GTK_BUTTON(listChilds->data), "clicked", G_CALLBACK(onOkBtnUpdateUpdateClicked), dlg);
+    listChilds = listChilds->next;
+    if(GTK_IS_BUTTON(listChilds->data) && !g_strcmp0(gtk_label_get_text(gtk_bin_get_child(listChilds->data)), "Cancel"))
+        g_signal_connect(GTK_BUTTON(listChilds->data), "clicked", G_CALLBACK(onCancelBtnUpdateUpdateClicked), dlg);
+    gtk_widget_hide(parentDlg);
+
+    mysql_free_result(result);
+    gtk_widget_show_all(dlg);
+
+
+}
+
+G_MODULE_EXPORT void onMenuItemUpdateClicked(GtkMenuItem * menuItem, GtkDialog * dlg){
+
+    gtk_widget_set_visible(GTK_WIDGET(menuItem), false);
+    gtk_widget_set_visible(GTK_WIDGET(menuItem), true);
+
+    GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)))));
+
+    while(listChilds && !GTK_IS_BOX(listChilds->data) )
+        listChilds = listChilds->next;
+    if(listChilds) {
+
+        listChilds = gtk_container_get_children( GTK_CONTAINER(GTK_BOX(listChilds->data)));
+        while(listChilds && !GTK_IS_COMBO_BOX_TEXT(listChilds->data) )
+            listChilds = listChilds->next;
+        if(listChilds) {
+            if(!showTablesLikeNotLikeDB("%\\_%", false))
+                return;
+            guint countTables = mysql_num_rows(result);
+            for(int cntTable = 0; cntTable < countTables; cntTable++)
+                gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(listChilds->data), mysql_fetch_row(result)[0]);
+            mysql_free_result(result);
+        }
+    }
+
+    showDlg(dlg);
+
+
+}
+
+G_MODULE_EXPORT void onCancelBtnInsertInsertClicked(GtkButton * btn, GtkDialog * dlg){
     g_free(g_object_get_data(dlg, "tableName"));
     gtk_widget_destroy(GTK_WIDGET(dlg));
 }
 
-G_MODULE_EXPORT void onOkInsertInsertClicked(GtkButton * btn, GtkDialog * dlg)
+G_MODULE_EXPORT void onOkBtnInsertInsertClicked(GtkButton * btn, GtkDialog * dlg)
 {
 
     GtkBox  * boxMain  = GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)));
@@ -42,7 +342,7 @@ G_MODULE_EXPORT void onOkInsertInsertClicked(GtkButton * btn, GtkDialog * dlg)
 
                 if(listChilds){
                     bufStr = values;
-                    values = g_strdup_printf("%s, %g", values, gtk_spin_button_get_value(listChilds->data));
+                    values = g_strdup_printf("%s, '%g'", values, gtk_spin_button_get_value(listChilds->data));
                     g_free(bufStr);
                 }
                 break;
@@ -55,7 +355,7 @@ G_MODULE_EXPORT void onOkInsertInsertClicked(GtkButton * btn, GtkDialog * dlg)
 
                     if(listChilds){
                         bufStr = values;
-                        values = g_strdup_printf("%s, %d", values, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(listChilds->data)));
+                        values = g_strdup_printf("%s, '%d'", values, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(listChilds->data)));
                         g_free(bufStr);
                     }
 
@@ -69,7 +369,7 @@ G_MODULE_EXPORT void onOkInsertInsertClicked(GtkButton * btn, GtkDialog * dlg)
 
                     if(listChilds){
                         bufStr = values;
-                        values = g_strdup_printf("%s, %g", values, gtk_spin_button_get_value(listChilds->data));
+                        values = g_strdup_printf("%s, '%g'", values, gtk_spin_button_get_value(listChilds->data));
                         g_free(bufStr);
                     }
                 }
@@ -84,7 +384,7 @@ G_MODULE_EXPORT void onOkInsertInsertClicked(GtkButton * btn, GtkDialog * dlg)
 
                     if(listChilds){
                         bufStr = values;
-                        values = g_strdup_printf("%s, %g", values, gtk_spin_button_get_value(listChilds->data));
+                        values = g_strdup_printf("%s, '%g'", values, gtk_spin_button_get_value(listChilds->data));
                         g_free(bufStr);
 
                     }
@@ -111,12 +411,12 @@ G_MODULE_EXPORT void onOkInsertInsertClicked(GtkButton * btn, GtkDialog * dlg)
         if(!i)
             i = true;
     }
-
+    mysql_free_result(result);
     insertDB(g_object_get_data(dlg, "tableName"), values);
 
     g_free(values);
     g_free(g_object_get_data(dlg, "tableName"));
-
+    mysql_free_result(result);
     gtk_widget_destroy(GTK_WIDGET(dlg));
 }
 
@@ -223,12 +523,12 @@ G_MODULE_EXPORT void onOkBtnInsertClicked(GtkButton * btn, GtkDialog * parentDlg
 
     listChilds  =  gtk_container_get_children(GTK_CONTAINER(GTK_BUTTON_BOX(gtk_dialog_get_action_area(dlg))));
     if(GTK_IS_BUTTON(listChilds->data) && !g_strcmp0(gtk_label_get_text(gtk_bin_get_child (listChilds->data)), "Ok"))
-        g_signal_connect(GTK_BUTTON(listChilds->data), "clicked", G_CALLBACK(onOkInsertInsertClicked), dlg);
+        g_signal_connect(GTK_BUTTON(listChilds->data), "clicked", G_CALLBACK(onOkBtnInsertInsertClicked), dlg);
     listChilds = listChilds->next;
     if(GTK_IS_BUTTON(listChilds->data) && !g_strcmp0(gtk_label_get_text(gtk_bin_get_child(listChilds->data)), "Cancel"))
-        g_signal_connect(GTK_BUTTON(listChilds->data), "clicked", G_CALLBACK(onCancelInsertInsertClicked), dlg);
+        g_signal_connect(GTK_BUTTON(listChilds->data), "clicked", G_CALLBACK(onCancelBtnInsertInsertClicked), dlg);
     gtk_widget_hide(parentDlg);
-
+    mysql_free_result(result);
     gtk_widget_show_all(dlg);
 
 }
@@ -238,7 +538,7 @@ G_MODULE_EXPORT void onMenuItemInsertClicked(GtkMenuItem * menuItem, GtkDialog *
 {
     gtk_widget_set_visible(GTK_WIDGET(menuItem), false);
     gtk_widget_set_visible(GTK_WIDGET(menuItem), true);
-   // gtk_menu_item_deselect(menuItem);
+
 
     GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)))));
 
@@ -295,40 +595,40 @@ G_MODULE_EXPORT void onOkBtnPrivilegeClicked(GtkButton * btn,  GtkDialog *  dlg)
 
                 if(!updateDB(AUTH_TABLE, setValue, "id", idUser)) {
                     mysql_select_db(con, DB_NAME);
-                    free(setValue);
-                    free(userRecord);
-                    free(idUser);
-                    free(loginUser);
-                    free(passwrdUser);
+                    g_free(setValue);
+                    g_free(userRecord);
+                    g_free(idUser);
+                    g_free(loginUser);
+                    g_free(passwrdUser);
 
                     return;
                 }
-                if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(listChilds->data)))//if isAdmin
+                if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(listChilds->data)))   //if isAdmin
                     if(!createUserDBMS_DB(loginUser, passwrdUser) || !grantAdminDBMS_DB(loginUser)) {
-                        free(setValue);
-                        free(userRecord);
-                        free(idUser);
-                        free(loginUser);
-                        free(passwrdUser);
+                        g_free(setValue);
+                        g_free(userRecord);
+                        g_free(idUser);
+                        g_free(loginUser);
+                        g_free(passwrdUser);
 
                         return;
                     } else;
                 else if(!dropUserDBMS_DB(loginUser)) {
-                    free(setValue);
-                    free(userRecord);
-                    free(idUser);
-                    free(loginUser);
-                    free(passwrdUser);
+                    g_free(setValue);
+                    g_free(userRecord);
+                    g_free(idUser);
+                    g_free(loginUser);
+                    g_free(passwrdUser);
                     return;
                 }
 
-                free(setValue);
+                g_free(setValue);
             }
 
-            free(userRecord);
-            free(idUser);
-            free(loginUser);
-            free(passwrdUser);
+            g_free(userRecord);
+            g_free(idUser);
+            g_free(loginUser);
+            g_free(passwrdUser);
         }
     }
     mysql_select_db(con, DB_NAME);
@@ -373,10 +673,10 @@ G_MODULE_EXPORT void onMenuItemPrivilegeClicked(GtkMenuItem * menuItem,  GtkDial
                 for(int cntField = 0; cntField < countFields; cntField++) {
                     str_buf2 = str_buf1;
                     str_buf1 = str_buf1 = g_strdup_printf("%s%s%s:%s", str_buf1 ? str_buf1 : "", str_buf1 ? ":" : "",record_Fields[cntField].name, row_Record[cntField]);
-                    free(str_buf2);
+                    g_free(str_buf2);
                 }
                 gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(listChilds->data), str_buf1);
-                free(str_buf1);
+                g_free(str_buf1);
                 str_buf1 = NULL;
 
             }
@@ -427,12 +727,12 @@ G_MODULE_EXPORT void onOkBtnLinkRecordsClicked(GtkButton * btn,  GtkDialog *  dl
 
             linkDB(nameTableParent, nameTableChild, valueFieldParent, valueFieldChild);
 
-            free(recordParent);
-            free(recordChild);
-            free(nameTableParent);
-            free(nameTableChild);
-            free(valueFieldParent);
-            free(valueFieldChild);
+            g_free(recordParent);
+            g_free(recordChild);
+            g_free(nameTableParent);
+            g_free(nameTableChild);
+            g_free(valueFieldParent);
+            g_free(valueFieldChild);
         }
     }
     hideDlg(dlg);
@@ -503,11 +803,11 @@ G_MODULE_EXPORT void onOkBtnLinkClicked(GtkButton * btn,  GtkDialog *  dlg)
 
                             str_buf2 = str_buf1;
                             str_buf1 = str_buf1 = g_strdup_printf("%s%s: %s ", str_buf1 ? str_buf1 : "", record_Fields[cntField].name, row_Record[cntField]);
-                            free(str_buf2);
+                            g_free(str_buf2);
 
                         }
                         gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(comboParent), str_buf1);
-                        free(str_buf1);
+                        g_free(str_buf1);
                         str_buf1 = NULL;
 
                     }
@@ -533,19 +833,19 @@ G_MODULE_EXPORT void onOkBtnLinkClicked(GtkButton * btn,  GtkDialog *  dlg)
 
                             str_buf2 = str_buf1;
                             str_buf1 = str_buf1 = g_strdup_printf("%s%s: %s ", str_buf1 ? str_buf1 : "", record_Fields[cntField].name, row_Record[cntField]);
-                            free(str_buf2);
+                            g_free(str_buf2);
 
                         }
                         gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(comboChild), str_buf1);
-                        free(str_buf1);
+                        g_free(str_buf1);
                         str_buf1 = NULL;
                     }
                     mysql_free_result(result);
                 }
             }
-            free(linkName);
-            free(parentName);
-            free(childName);
+            g_free(linkName);
+            g_free(parentName);
+            g_free(childName);
         }
 
     }
@@ -558,7 +858,7 @@ G_MODULE_EXPORT void onMenuItemLinkClicked(GtkMenuItem * menuItem,  GtkDialog * 
 {
     gtk_widget_set_visible(GTK_WIDGET(menuItem), false);
     gtk_widget_set_visible(GTK_WIDGET(menuItem), true);
-   // gtk_menu_item_deselect(menuItem);
+
 
     GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)))));
 
@@ -591,340 +891,6 @@ G_MODULE_EXPORT void onMenuItemLinkClicked(GtkMenuItem * menuItem,  GtkDialog * 
     showDlg(dlg);
 }
 
-
-G_MODULE_EXPORT void onOkBtnUpdateArchClicked(GtkButton * btn,  GtkDialog *  dlg)
-{
-
-    GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)))));
-    while(listChilds && !GTK_IS_BOX(listChilds->data))
-        listChilds = listChilds->next;
-
-    if(listChilds) {
-        listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(listChilds->data)));
-
-        while(listChilds && !GTK_IS_COMBO_BOX_TEXT(listChilds->data), g_strcmp0(gtk_widget_get_name(GTK_WIDGET(listChilds)), "combo"));
-        listChilds = listChilds->next;
-        if(listChilds) {
-
-            guchar * record = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(listChilds->data));
-            guchar * buf_ptr = strchr(record, ' ') +1;
-            guchar * id = g_strndup(buf_ptr, strchr(buf_ptr, ' ') - (char *) buf_ptr );
-
-            guchar * setValue = g_strdup_printf("`%s` = '%s', ", "id", id);
-            guchar * buf;
-
-
-            while(listChilds && !GTK_IS_ENTRY(listChilds->data))
-                listChilds = listChilds->next;
-            if(listChilds) {
-                buf = setValue;
-                setValue =  g_strdup_printf("%s`%s` = '%s', ", setValue, gtk_widget_get_name(GTK_WIDGET(listChilds->data)),
-                                            gtk_entry_get_text(GTK_ENTRY(listChilds->data))) ;
-                free(buf);
-
-
-                while(listChilds && !GTK_IS_SPIN_BUTTON(listChilds->data))
-                    listChilds = listChilds->next;
-
-                if(listChilds) {
-                    buf = setValue;
-                    setValue =  g_strdup_printf("%s`%s` = '%d', ", setValue, gtk_widget_get_name(GTK_WIDGET(listChilds->data)),
-                                                gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(listChilds->data)));
-                    free(buf);
-
-                    do
-                        if(listChilds)
-                            listChilds = listChilds->next;
-                    while(listChilds && !GTK_IS_SPIN_BUTTON(listChilds->data));
-
-                    if(listChilds) {
-
-                        buf = setValue;
-                        setValue =  g_strdup_printf("%s`%s` = '%d', ", setValue, gtk_widget_get_name(GTK_WIDGET(listChilds->data)),
-                                                    gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(listChilds->data)));
-                        free(buf);
-
-                        while(listChilds && !GTK_IS_CHECK_BUTTON(listChilds->data))
-                            listChilds = listChilds->next;
-
-                        if(listChilds) {
-
-                            buf = setValue;
-                            setValue =  g_strdup_printf("%s`%s` = '%d', ", setValue, gtk_widget_get_name(GTK_WIDGET(listChilds->data)),
-                                                        gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(GTK_CHECK_BUTTON(listChilds->data))));
-                            free(buf);
-
-                            do
-                                if(listChilds)
-                                    listChilds = listChilds->next;
-                            while(listChilds && !GTK_IS_CHECK_BUTTON(listChilds->data));
-
-                            if(listChilds) {
-
-                                buf = setValue;
-                                setValue =  g_strdup_printf("%s`%s` = '%d', ", setValue, gtk_widget_get_name(GTK_WIDGET(listChilds->data)),
-                                                            gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(GTK_CHECK_BUTTON(listChilds->data))));
-                                free(buf);
-
-                                do
-                                    if(listChilds)
-                                        listChilds = listChilds->next;
-                                while(listChilds && !GTK_IS_CHECK_BUTTON(listChilds->data));
-
-
-                                if(listChilds) {
-
-                                    buf = setValue;
-                                    setValue =  g_strdup_printf("%s`%s` = '%d', ", setValue, gtk_widget_get_name(GTK_WIDGET(listChilds->data)),
-                                                                gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(GTK_CHECK_BUTTON(listChilds->data))));
-                                    free(buf);
-
-                                    do
-                                        if(listChilds)
-                                            listChilds = listChilds->next;
-                                    while(listChilds && !GTK_IS_CHECK_BUTTON(listChilds->data));
-
-                                    if(listChilds) {
-
-                                        buf = setValue;
-                                        setValue =  g_strdup_printf("%s`%s` = '%d', ", setValue, gtk_widget_get_name(GTK_WIDGET(listChilds->data)),
-                                                                    gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(GTK_CHECK_BUTTON(listChilds->data))));
-                                        free(buf);
-
-                                        do
-                                            if(listChilds)
-                                                listChilds = listChilds->next;
-                                        while(listChilds && !GTK_IS_CHECK_BUTTON(listChilds->data));
-
-                                        if(listChilds) {
-                                            buf = setValue;
-                                            setValue =  g_strdup_printf("%s`%s` = '%d'", setValue, gtk_widget_get_name(GTK_WIDGET(listChilds->data)),
-                                                                        gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(GTK_CHECK_BUTTON(listChilds->data))));
-                                            free(buf);
-
-                                            updateDB("процессорна архітектура", setValue, "id", id);
-                                            free(setValue);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            free(record);
-            free(id);
-        }
-    }
-    hideDlg(dlg);
-}
-
-G_MODULE_EXPORT void onOkBtnUpdateFamilyClicked(GtkButton * btn,  GtkDialog *  dlg)
-{
-    GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)))));
-
-    while(listChilds && !GTK_IS_BOX(listChilds->data))
-        listChilds = listChilds->next;
-
-    if(listChilds) {
-        listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(listChilds->data)));
-
-        while(listChilds && !GTK_IS_COMBO_BOX_TEXT(listChilds->data) && g_strcmp0(gtk_widget_get_name(GTK_WIDGET(listChilds)), "combo"))
-            listChilds = listChilds->next;
-        if(listChilds) {
-
-            guchar * record = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(listChilds->data));
-            guchar * buf_ptr = strchr(record, ' ') +1;
-            guchar * id = g_strndup(buf_ptr, strchr(buf_ptr, ' ') - (char *) buf_ptr );
-
-            guchar * setValue = g_strdup_printf("`%s` = '%s', ", "id", id);
-            guchar * buf;
-
-            while(listChilds && !GTK_IS_ENTRY(listChilds->data))
-                listChilds = listChilds->next;
-            if(listChilds) {
-                buf = setValue;
-                setValue =  g_strdup_printf("%s`%s` = '%s', ", setValue, gtk_widget_get_name(GTK_WIDGET(listChilds->data)),
-                                            gtk_entry_get_text(GTK_ENTRY(listChilds->data))) ;
-                free(buf);
-
-                while(listChilds && !GTK_IS_COMBO_BOX_TEXT(listChilds->data))
-                    listChilds = listChilds->next;
-                if(listChilds) {
-                    buf = setValue;
-                    setValue =  g_strdup_printf("%s`%s` = '%s', ",  setValue, gtk_widget_get_name(GTK_WIDGET(listChilds->data)),
-                                                gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(listChilds->data)));
-                    free(buf);
-
-                    while(listChilds && !GTK_IS_CHECK_BUTTON(listChilds->data))
-                        listChilds = listChilds->next;
-                    if(listChilds) {
-
-                        buf = setValue;
-                        setValue =  g_strdup_printf("%s`%s` = '%d'",  setValue, gtk_widget_get_name(GTK_WIDGET(listChilds->data)),
-                                                    gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(GTK_CHECK_BUTTON(listChilds->data))));
-                        free(buf);
-
-                        updateDB("сімейство архітектур", setValue, "id", id);
-                        free(setValue);
-                    }
-                }
-            }
-
-            free(record);
-            free(id);
-        }
-    }
-
-    hideDlg(dlg);
-}
-
-G_MODULE_EXPORT void onOkBtnUpdateCompanyClicked(GtkButton * btn,  GtkDialog *  dlg)
-{
-    GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)))));
-
-    while(listChilds && !GTK_IS_BOX(listChilds->data))
-        listChilds = listChilds->next;
-
-    if(listChilds) {
-        listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(listChilds->data)));
-
-        while(listChilds && !GTK_IS_COMBO_BOX_TEXT(listChilds->data))
-            listChilds = listChilds->next;
-        if(listChilds) {
-
-            guchar * record = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(listChilds->data));
-            guchar * buf_ptr = strchr(record, ' ') +1;
-            guchar * id = g_strndup(buf_ptr, strchr(buf_ptr, ' ') - (char *) buf_ptr );
-
-            guchar * setValue = g_strdup_printf("`%s` = '%s', ", "id", id);
-            guchar * buf;
-
-            while(listChilds && !GTK_IS_ENTRY(listChilds->data))
-                listChilds = listChilds->next;
-            if(listChilds) {
-
-                buf = setValue;
-                setValue = g_strdup_printf("%s`%s` = '%s'", setValue, gtk_widget_get_name(GTK_WIDGET(listChilds->data)),
-                                           gtk_entry_get_text(GTK_ENTRY(listChilds->data)));
-                free(buf);
-
-                updateDB("компанія-розробник архітектури", setValue, "id", id);
-                free(setValue);
-            }
-            free(record);
-            free(id);
-        }
-    }
-    hideDlg(dlg);
-}
-
-
-
-G_MODULE_EXPORT void onOkBtnUpdateDirectoryClicked(GtkButton * btn,  GtkDialog *  dlg)
-{
-
-    GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)))));
-
-    while(listChilds && !GTK_IS_BOX(listChilds->data))
-        listChilds = listChilds->next;
-
-    if(listChilds) {
-        listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(listChilds->data)));
-
-        while(listChilds && !GTK_IS_COMBO_BOX_TEXT(listChilds->data))
-            listChilds = listChilds->next;
-        if(listChilds) {
-
-            guchar * record = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(listChilds->data));
-            guchar * buf_ptr = strchr(record, ' ') +1;
-            guchar * id = g_strndup(buf_ptr, strchr(buf_ptr, ' ') - (char *) buf_ptr );
-
-            guchar * setValue = g_strdup_printf("`%s` = '%s', ", "id", id);
-            guchar * buf;
-
-            while(listChilds && !GTK_IS_ENTRY(listChilds->data))
-                listChilds = listChilds->next;
-            if(listChilds) {
-
-                buf = setValue;
-                setValue = g_strdup_printf("%s`%s` = '%s'", setValue, gtk_widget_get_name(GTK_WIDGET(listChilds->data)),
-                                           gtk_entry_get_text(GTK_ENTRY(listChilds->data)));
-                free(buf);
-
-                updateDB("довідник архітектур пк", setValue, "id", id);
-                free(setValue);
-
-            }
-            free(record);
-            free(id);
-        }
-    }
-    hideDlg(dlg);
-}
-
-
-G_MODULE_EXPORT void onOkBtnUpdateClicked(GtkButton * btn,  GtkDialog *  dlg)
-{
-    GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)))));
-
-    while(listChilds && !GTK_IS_BUTTON_BOX (listChilds->data) &&   g_strcmp0(gtk_widget_get_name(GTK_WIDGET(listChilds->data)), "radioBtns")  )
-        listChilds = listChilds->next;
-
-    if(listChilds) {
-        listChilds = gtk_container_get_children(GTK_CONTAINER(listChilds->data));
-
-        while(listChilds && !gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON( GTK_RADIO_BUTTON(listChilds->data) )))
-            listChilds = listChilds->next;
-        if(listChilds) {
-            GtkDialog * choosedDlg =  gtk_builder_get_object(builder, gtk_widget_get_name(GTK_WIDGET(listChilds->data)));
-            guchar * nameTable =  gtk_button_get_label(GTK_BUTTON(listChilds->data));
-
-            listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(choosedDlg)))));
-
-            while(listChilds && !GTK_IS_BOX (listChilds->data))
-                listChilds = listChilds->next;
-            if(listChilds) {
-                listChilds =  gtk_container_get_children(GTK_CONTAINER(GTK_BOX(listChilds->data)));
-                while(listChilds && !GTK_IS_COMBO_BOX_TEXT(listChilds->data) )
-                    listChilds = listChilds->next;
-
-                if(listChilds) {
-
-                    gtk_combo_box_text_remove_all(GTK_COMBO_BOX_TEXT(listChilds->data));
-
-                    guchar * str_buf1 = NULL;
-                    guchar * str_buf2 = NULL;
-
-                    selectTableDB(nameTable, false, NULL);
-                    guint countRecords = mysql_num_rows(result);
-
-                    for(int cntRow = 0; cntRow < countRecords; cntRow++) {
-
-                        MYSQL_ROW row_Record = mysql_fetch_row(result);
-                        guint countFields = mysql_num_fields(result);
-
-                        MYSQL_FIELD * record_Fields = mysql_fetch_fields(result);
-                        for(int cntField = 0; cntField < countFields; cntField++) {
-
-                            str_buf2 = str_buf1;
-                            str_buf1 = str_buf1 = g_strdup_printf("%s%s: %s ", str_buf1 ? str_buf1 : "", record_Fields[cntField].name, row_Record[cntField]);
-                            free(str_buf2);
-
-                        }
-                        gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(listChilds->data), str_buf1);
-                        free(str_buf1);
-                        str_buf1 = NULL;
-                    }
-                    mysql_free_result(result);
-                }
-            }
-            hideDlg(dlg);
-            showDlg(choosedDlg);
-        }
-    }
-}
-
 G_MODULE_EXPORT void onOkBtnDeleteClicked(GtkButton * btn,  GtkDialog *  dlg)
 {
     GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)))));
@@ -948,10 +914,10 @@ G_MODULE_EXPORT void onOkBtnDeleteClicked(GtkButton * btn,  GtkDialog *  dlg)
             guchar * fieldValue = g_strndup(buf_ptr, strchr(buf_ptr, ' ') - (char *)buf_ptr );
             deleteDB(nameTable, nameField, fieldValue);
 
-            free(record);
-            free(nameTable);
-            free(nameField);
-            free(fieldValue);
+            g_free(record);
+            g_free(nameTable);
+            g_free(nameField);
+            g_free(fieldValue);
 
         }
     }
@@ -963,7 +929,6 @@ G_MODULE_EXPORT void onMenuItemDeleteClicked(GtkMenuItem * menuItem,  GtkDialog 
 
     gtk_widget_set_visible(GTK_WIDGET(menuItem), false);
     gtk_widget_set_visible(GTK_WIDGET(menuItem), true);
-    //gtk_menu_item_deselect(menuItem);
 
     GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)))));
 
@@ -1009,10 +974,10 @@ G_MODULE_EXPORT void onMenuItemDeleteClicked(GtkMenuItem * menuItem,  GtkDialog 
 
                         str_buf2 = str_buf1;
                         str_buf1 = str_buf1 = g_strdup_printf("%s%s: %s ", str_buf1, record_Fields[cntField].name, row_Record[cntField]);
-                        free(str_buf2);
+                        g_free(str_buf2);
                     }
                     gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(listChilds->data), str_buf1);
-                    free(str_buf1);
+                    g_free(str_buf1);
                     str_buf1 = NULL;
                 }
                 mysql_free_result(result);
@@ -1023,227 +988,10 @@ G_MODULE_EXPORT void onMenuItemDeleteClicked(GtkMenuItem * menuItem,  GtkDialog 
     showDlg(dlg);
 }
 
-G_MODULE_EXPORT void onOkBtnInsertArchClicked(GtkButton * btn,  GtkDialog *  dlg)
-{
-    GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)))));
-
-    while(listChilds && !GTK_IS_BOX(listChilds->data) )
-        listChilds = listChilds->next;
-
-    if(listChilds) {
-        listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(listChilds->data)));
-
-        while(listChilds && !GTK_IS_ENTRY(listChilds->data) )
-            listChilds = listChilds->next;
-        if(listChilds) {
-            guchar * values = g_strdup_printf("null, '%s'", gtk_entry_get_text(GTK_ENTRY(listChilds->data)));
-            guchar * buf;
-
-            while(listChilds && !GTK_IS_SPIN_BUTTON(listChilds->data))
-                listChilds = listChilds->next;
-
-            if(listChilds) {
-
-                buf = values;
-                values = g_strdup_printf("%s, %d", values, gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(listChilds->data)));
-                free(buf);
-
-                do
-                    if(listChilds)
-                        listChilds = listChilds->next;
-                while(listChilds && !GTK_IS_SPIN_BUTTON(listChilds->data));
-
-                if(listChilds) {
-
-                    buf = values;
-
-                    values = g_strdup_printf("%s, %d", values, gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(listChilds->data)));
-                    free(buf);
-
-                    while(listChilds && !GTK_IS_CHECK_BUTTON(listChilds->data))
-                        listChilds = listChilds->next;
-
-                    if(listChilds) {
-
-                        buf = values;
-                        values = g_strdup_printf("%s, %d", values, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(GTK_CHECK_BUTTON(listChilds->data))));
-                        free(buf);
-
-                        do
-                            if(listChilds)
-                                listChilds = listChilds->next;
-                        while(listChilds && !GTK_IS_CHECK_BUTTON(listChilds->data));
-
-                        if(listChilds) {
-
-                            buf = values;
-                            values = g_strdup_printf("%s, %d", values, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(GTK_CHECK_BUTTON(listChilds->data))));
-                            free(buf);
-
-                            do
-                                if(listChilds)
-                                    listChilds = listChilds->next;
-                            while(listChilds && !GTK_IS_CHECK_BUTTON(listChilds->data));
-
-
-                            if(listChilds) {
-
-                                buf = values;
-                                values = g_strdup_printf("%s, %d", values, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(GTK_CHECK_BUTTON(listChilds->data))));
-                                free(buf);
-
-                                do
-                                    if(listChilds)
-                                        listChilds = listChilds->next;
-                                while(listChilds && !GTK_IS_CHECK_BUTTON(listChilds->data));
-
-                                if(listChilds) {
-
-                                    buf = values;
-                                    values = g_strdup_printf("%s, %d", values, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(GTK_CHECK_BUTTON(listChilds->data))));
-                                    free(buf);
-
-                                    do
-                                        if(listChilds)
-                                            listChilds = listChilds->next;
-                                    while(listChilds && !GTK_IS_CHECK_BUTTON(listChilds->data));
-
-                                    if(listChilds) {
-                                        buf = values;
-                                        values = g_strdup_printf("%s, %d", values, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(GTK_CHECK_BUTTON(listChilds->data))));
-                                        free(buf);
-
-                                        insertDB("процессорна архітектура", values);
-                                        free(values);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    hideDlg(dlg);
-}
-
-
-
-G_MODULE_EXPORT void onOkBtnInsertFamilyClicked(GtkButton * btn,  GtkDialog *  dlg)
-{
-    GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)))));
-
-    while(listChilds && !GTK_IS_BOX(listChilds->data))
-        listChilds = listChilds->next;
-
-    if(listChilds) {
-        listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(listChilds->data)));
-
-        if(listChilds) {
-
-            while(listChilds && !GTK_IS_ENTRY(listChilds->data))
-                listChilds = listChilds->next;
-
-            if(listChilds) {
-
-                guchar * values = g_strdup_printf("null, '%s'", gtk_entry_get_text(GTK_ENTRY(listChilds->data)));
-                guchar * buf;
-
-                while(listChilds && !GTK_IS_COMBO_BOX_TEXT(listChilds->data))
-                    listChilds = listChilds->next;
-                if(listChilds) {
-                    buf = values;
-                    values = g_strdup_printf("%s, '%s'", values, gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(listChilds->data)));
-                    free(buf);
-
-                    while(listChilds && !GTK_IS_CHECK_BUTTON(listChilds->data))
-                        listChilds = listChilds->next;
-                    if(listChilds) {
-
-                        buf = values;
-                        values = g_strdup_printf("%s, %d", values, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(GTK_CHECK_BUTTON(listChilds->data))));
-                        free(buf);
-
-                        insertDB("сімейство архітектур", values);
-                        free(values);
-                    }
-                }
-            }
-        }
-    }
-    hideDlg(dlg);
-}
-
-G_MODULE_EXPORT void onOkBtnInsertCompanyClicked(GtkButton * btn,  GtkDialog *  dlg)
-{
-    GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)))));
-
-    while(listChilds && !GTK_IS_BOX(listChilds->data))
-        listChilds = listChilds->next;
-
-    if(listChilds) {
-        listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(listChilds->data)));
-
-        while(listChilds && !GTK_IS_ENTRY(listChilds->data))
-            listChilds = listChilds->next;
-        if(listChilds) {
-            guchar * values = g_strdup_printf("null, '%s'", gtk_entry_get_text(GTK_ENTRY(listChilds->data)));
-
-            insertDB("компанія-розробник архітектури", values);
-            free(values);
-        }
-    }
-    hideDlg(dlg);
-}
-
-
-G_MODULE_EXPORT void onOkBtnInsertDirectoryClicked(GtkButton * btn,  GtkDialog *  dlg)
-{
-    GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)))));
-
-    while(listChilds && !GTK_IS_BOX(listChilds->data))
-        listChilds = listChilds->next;
-
-    if(listChilds) {
-        listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(listChilds->data)));
-
-        while(listChilds && !GTK_IS_ENTRY(listChilds->data))
-            listChilds = listChilds->next;
-        if(listChilds) {
-            guchar * values = g_strdup_printf("null, '%s'", gtk_entry_get_text(GTK_ENTRY(listChilds->data)));
-
-            insertDB("довідник архітектур пк", values);
-            free(values);
-        }
-    }
-    hideDlg(dlg);
-}
-
-//G_MODULE_EXPORT void onOkBtnInsertClicked(GtkButton * btn,  GtkDialog *  dlg)
-//{
-//    GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)))));
-//
-//    while(listChilds && !GTK_IS_BUTTON_BOX (listChilds->data) &&   g_strcmp0(gtk_widget_get_name(GTK_WIDGET(listChilds->data)), "radioBtns")  )
-//        listChilds = listChilds->next;
-//
-//    if(listChilds) {
-//        listChilds = gtk_container_get_children(GTK_CONTAINER(listChilds->data));
-//
-//        while(listChilds && !gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON( GTK_RADIO_BUTTON(listChilds->data) )))
-//            listChilds = listChilds->next;
-//        if(listChilds) {
-//            GtkDialog * choosedDlg =  gtk_builder_get_object(builder, gtk_widget_get_name(GTK_WIDGET(listChilds->data)));
-//            hideDlg(dlg);
-//            showDlg(choosedDlg);
-//        }
-//    }
-//}
-
 G_MODULE_EXPORT void onAdminMenuClicked(GtkMenuItem * menuItem,  GtkMessageDialog * msgDlg)
 {
 
     if(!isAdm) {
-        //gtk_menu_item_deselect(menuItem);
         gtk_widget_set_visible(gtk_menu_item_get_submenu(menuItem), false);
         showMsg(msgDlg, "Доступ запрещен. Нету прав администратора !");
     }
@@ -1283,7 +1031,7 @@ m:        selectTableDB(gtk_combo_box_text_get_active_text((GtkComboBoxText *)(*
     } else {
         guchar * bufLn = g_strdup_printf("%s\\_%%", gtk_combo_box_text_get_active_text((GtkComboBoxText *)(*args)->arg3));
         if(!showTablesLikeNotLikeDB(bufLn, true)) {
-            free(bufLn);
+            g_free(bufLn);
             return;
         }
 
@@ -1295,12 +1043,12 @@ m:        selectTableDB(gtk_combo_box_text_get_active_text((GtkComboBoxText *)(*
             gtk_text_buffer_insert_at_cursor(buf, res, -1);
                         else goto m;
         } else {
-            free(bufLn);
+            g_free(bufLn);
             mysql_free_result(result);
 
             goto m;
         }
-        free(bufLn);
+        g_free(bufLn);
     }
     gtk_text_buffer_insert_at_cursor(buf, "\n", -1);
     hideDlg((GtkDialog *)(*args)->arg1);
@@ -1315,7 +1063,6 @@ G_MODULE_EXPORT void onMenuItemSelectClicked(GtkMenuItem * menuItem, GtkDialog *
 {
     gtk_widget_set_visible(GTK_WIDGET(menuItem), false);
     gtk_widget_set_visible(GTK_WIDGET(menuItem), true);
-   // gtk_menu_item_deselect(menuItem);
 
     GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)))));
 
@@ -1390,7 +1137,7 @@ G_MODULE_EXPORT void onBtnLoginClicked(GtkButton *btn, Args3EventHandler  **form
     if(g_ascii_strtoull (row[OFFSET_IS_ADMIN], NULL, 0))
         if(loginUserDB(row[OFFSET_LOGIN], row[OFFSET_PASSWRD], g_ascii_strtoull (row[OFFSET_IS_ADMIN], NULL, 0))) {
             mysql_free_result(result);
-            free(*forms);
+            g_free(*forms);
             *forms = NULL;
             gtk_window_close(window);
             createWin(&window,"winMain", "resource/winMain.glade");
@@ -1402,7 +1149,7 @@ G_MODULE_EXPORT void onBtnLoginClicked(GtkButton *btn, Args3EventHandler  **form
 
     else if(loginUserDB(NULL, NULL, 0)) {
         mysql_free_result(result);
-        free(*forms);
+        g_free(*forms);
         *forms = NULL;
         gtk_window_close(window);
         createWin(&window,"winMain", "resource/winMain.glade");
@@ -1426,7 +1173,7 @@ G_MODULE_EXPORT void onBtnRegisterClicked(GtkButton *btn, Args3EventHandler **fo
     }
 
     if(loginUserDB(NULL, NULL, 0)) {
-        free(*forms);
+        g_free(*forms);
         *forms = NULL;
         gtk_window_close(window);
         createWin(&window,"winMain", "resource/winMain.glade");
