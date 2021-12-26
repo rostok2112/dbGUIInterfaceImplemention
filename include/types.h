@@ -61,8 +61,8 @@ G_MODULE_EXPORT void onAdminMenuClicked(GtkMenuItem *,  GtkMessageDialog *);
 G_MODULE_EXPORT void onMenuItemInsertClicked(GtkMenuItem *, GtkDialog *);
 G_MODULE_EXPORT void onOkBtnInsertClicked(GtkButton *,  GtkDialog *);
 G_MODULE_EXPORT void onOkBtnInsertInsertClicked(GtkButton *, GtkDialog *);
-G_MODULE_EXPORT void onCancelBtnInsertInsertClicked(GtkButton *, GtkDialog *)
-G_MODULE_EXPORT void onMenuItemDeleteClicked(GtkMenuItem *,  GtkDialog *)
+G_MODULE_EXPORT void onCancelBtnInsertInsertClicked(GtkButton *, GtkDialog *);
+G_MODULE_EXPORT void onMenuItemDeleteClicked(GtkMenuItem *,  GtkDialog *);
 G_MODULE_EXPORT void onOkBtnDeleteClicked(GtkButton *,  GtkDialog *);
 G_MODULE_EXPORT void onMenuItemUpdateClicked(GtkMenuItem *, GtkDialog *);
 G_MODULE_EXPORT void onOkBtnUpdateClicked(GtkButton *,  GtkDialog *);
@@ -85,10 +85,10 @@ void winMainSetEventHandlers(void);
 bool createNewUserDB(guchar [], guchar [], bool);
 bool checkUserDB(guchar [], guchar []);
 bool loginUserDB(guchar [], guchar [], bool );
-bool selectTableDB(guchar[], bool, guchar **);
+bool selectWithChildsDB(guchar[], guchar **);
+bool selectDB(guchar []);
 bool insertDB(guchar [], guchar []);
 bool showTablesLikeNotLikeDB(guchar [], bool);
-bool selectDB(guchar []);
 bool deleteDB(guchar [],  guchar [], guchar []);
 bool updateDB(guchar [], guchar [], guchar [], guchar []);
 bool linkDB(guchar [], guchar [], guchar [], guchar []);

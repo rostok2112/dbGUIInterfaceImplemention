@@ -17,9 +17,9 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkDialog" id="dlgDelete">
+  <object class="GtkDialog" id="dlgDlg">
     <property name="can-focus">False</property>
-    <property name="title" translatable="yes">Удаление записей</property>
+    <property name="title" translatable="yes">записей</property>
     <property name="modal">True</property>
     <property name="type-hint">dialog</property>
     <child internal-child="vbox">
@@ -32,103 +32,13 @@
             <property name="can-focus">False</property>
             <property name="layout-style">end</property>
             <child>
-              <object class="GtkButton" id="btnOk7">
+              <object class="GtkButton" id="btnOk3">
                 <property name="label" translatable="yes">Ok</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-                <signal name="clicked" handler="onOkBtnDeleteClicked" object="dlgDelete" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="btnCancel8">
-                <property name="label" translatable="yes">Закрыть</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-                <signal name="clicked" handler="onCancelBtn1Clicked" object="dlgDelete" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="orientation">vertical</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Запись для удаления:</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkComboBoxText">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="active">0</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="pack-type">end</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-  </object>
-  <object class="GtkDialog" id="dlgInsert">
-    <property name="name">mmmm</property>
-    <property name="can-focus">False</property>
-    <property name="title" translatable="yes">Добавление записей</property>
-    <property name="modal">True</property>
-    <property name="type-hint">dialog</property>
-    <child internal-child="vbox">
-      <object class="GtkBox">
-        <property name="can-focus">False</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">2</property>
-        <child internal-child="action_area">
-          <object class="GtkButtonBox">
-            <property name="can-focus">False</property>
-            <property name="layout-style">end</property>
-            <child>
-              <object class="GtkButton" id="btnOk16">
-                <property name="label" translatable="yes">Ok</property>
+                <property name="name">OkBtnDlgDlg</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <property name="double-buffered">False</property>
-                <signal name="clicked" handler="onOkBtnInsertClicked" object="dlgInsert" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -137,12 +47,13 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="btnCancel17">
+              <object class="GtkButton" id="btnCancel4">
                 <property name="label" translatable="yes">Закрыть</property>
+                <property name="name">CancelBtnDlgDlg</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
-                <signal name="clicked" handler="onCancelBtn1Clicked" object="dlgInsert" swapped="no"/>
+                <signal name="clicked" handler="onCancelBtn1Clicked" object="dlgDlg" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -166,7 +77,7 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Выберите таблицу для добавления записи:</property>
+                <property name="label" translatable="yes">Выберите таблицу:</property>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -198,7 +109,6 @@
     </child>
   </object>
   <object class="GtkDialog" id="dlgLink">
-    <property name="name">mmmm</property>
     <property name="can-focus">False</property>
     <property name="title" translatable="yes">Связывание записей</property>
     <property name="modal">True</property>
@@ -410,7 +320,6 @@
     </child>
   </object>
   <object class="GtkDialog" id="dlgPrivilege">
-    <property name="name">mmmm</property>
     <property name="can-focus">False</property>
     <property name="title" translatable="yes">Добавление превилегий</property>
     <property name="modal">True</property>
@@ -515,96 +424,6 @@
       </object>
     </child>
   </object>
-  <object class="GtkDialog" id="dlgUpdate">
-    <property name="can-focus">False</property>
-    <property name="title" translatable="yes">Редактирование записей</property>
-    <property name="modal">True</property>
-    <property name="type-hint">dialog</property>
-    <child internal-child="vbox">
-      <object class="GtkBox">
-        <property name="can-focus">False</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">2</property>
-        <child internal-child="action_area">
-          <object class="GtkButtonBox">
-            <property name="can-focus">False</property>
-            <property name="layout-style">end</property>
-            <child>
-              <object class="GtkButton" id="btnOk2">
-                <property name="label" translatable="yes">Ok</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-                <property name="double-buffered">False</property>
-                <signal name="clicked" handler="onOkBtnUpdateClicked" object="dlgUpdate" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="btnCancel2">
-                <property name="label" translatable="yes">Закрыть</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-                <signal name="clicked" handler="onCancelBtn1Clicked" object="dlgUpdate" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="orientation">vertical</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Выберите таблицу для редактирования записи:</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkComboBoxText">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="active">0</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="pack-type">end</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-  </object>
   <object class="GtkImage" id="image1">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -632,7 +451,7 @@
   </object>
   <object class="GtkTextBuffer" id="textBufferMainTextArea"/>
   <object class="GtkTextBuffer" id="textbufferMsg"/>
-  <object class="GtkMessageDialog" id="msgDlg">
+  <object class="GtkMessageDialog" id="dlgMsg">
     <property name="can-focus">False</property>
     <property name="title" translatable="yes">Сообщение</property>
     <property name="modal">True</property>
@@ -820,7 +639,7 @@
                 <property name="can-focus">False</property>
                 <property name="label" translatable="yes">Очистить</property>
                 <property name="use-underline">True</property>
-                <signal name="select" handler="clear" object="mainTextArea" swapped="no"/>
+                <signal name="activate" handler="clear" object="mainTextArea" swapped="no"/>
               </object>
             </child>
             <child>
@@ -829,7 +648,7 @@
                 <property name="can-focus">False</property>
                 <property name="label" translatable="yes">Отобразить</property>
                 <property name="use-underline">True</property>
-                <signal name="select" handler="onMenuItemSelectClicked" object="dlgSelect" swapped="no"/>
+                <signal name="activate" handler="onMenuItemSelectClicked" object="dlgSelect" swapped="no"/>
                 <signal name="touch-event" handler="onMenuItemClicked" object="dlgSelect" swapped="no"/>
               </object>
             </child>
@@ -838,7 +657,7 @@
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="label" translatable="yes">Для администрации</property>
-                <signal name="select" handler="onAdminMenuClicked" object="msgDlg" swapped="no"/>
+                <signal name="activate" handler="onAdminMenuClicked" object="dlgMsg" swapped="no"/>
                 <child type="submenu">
                   <object class="GtkMenu">
                     <property name="visible">True</property>
@@ -850,7 +669,7 @@
                         <property name="can-focus">False</property>
                         <property name="image">image9</property>
                         <property name="use-stock">False</property>
-                        <signal name="activate" handler="onMenuItemInsertClicked" object="dlgInsert" swapped="no"/>
+                        <signal name="activate" handler="onMenuItemInsertClicked" object="dlgDlg" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -860,7 +679,7 @@
                         <property name="can-focus">False</property>
                         <property name="image">image10</property>
                         <property name="use-stock">False</property>
-                        <signal name="activate" handler="onMenuItemDeleteClicked" object="dlgDelete" swapped="no"/>
+                        <signal name="activate" handler="onMenuItemDeleteClicked" object="dlgDlg" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -870,7 +689,7 @@
                         <property name="can-focus">False</property>
                         <property name="image">image1</property>
                         <property name="use-stock">False</property>
-                        <signal name="activate" handler="onMenuItemUpdateClicked" object="dlgUpdate" swapped="no"/>
+                        <signal name="activate" handler="onMenuItemUpdateClicked" object="dlgDlg" swapped="no"/>
                       </object>
                     </child>
                     <child>
