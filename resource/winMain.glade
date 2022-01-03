@@ -21,7 +21,9 @@
     <property name="can-focus">False</property>
     <property name="title" translatable="yes">записей</property>
     <property name="modal">True</property>
+    <property name="destroy-with-parent">True</property>
     <property name="type-hint">dialog</property>
+    <property name="deletable">False</property>
     <child internal-child="vbox">
       <object class="GtkBox">
         <property name="can-focus">False</property>
@@ -53,7 +55,7 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
-                <signal name="clicked" handler="onCancelBtn1Clicked" object="dlgDlg" swapped="no"/>
+                <signal name="clicked" handler="onCancelBtnDlgClicked" object="dlgDlg" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -112,7 +114,9 @@
     <property name="can-focus">False</property>
     <property name="title" translatable="yes">Связывание записей</property>
     <property name="modal">True</property>
+    <property name="destroy-with-parent">True</property>
     <property name="type-hint">dialog</property>
+    <property name="deletable">False</property>
     <child internal-child="vbox">
       <object class="GtkBox">
         <property name="can-focus">False</property>
@@ -143,7 +147,7 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
-                <signal name="clicked" handler="onCancelBtn1Clicked" object="dlgLink" swapped="no"/>
+                <signal name="clicked" handler="onCancelBtnDlgClicked" object="dlgLink" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -201,7 +205,9 @@
     <property name="can-focus">False</property>
     <property name="title" translatable="yes">Связывание записей</property>
     <property name="modal">True</property>
+    <property name="destroy-with-parent">True</property>
     <property name="type-hint">dialog</property>
+    <property name="deletable">False</property>
     <child internal-child="vbox">
       <object class="GtkBox">
         <property name="can-focus">False</property>
@@ -231,7 +237,7 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
-                <signal name="clicked" handler="onCancelBtn1Clicked" object="dlgLinkRecords" swapped="no"/>
+                <signal name="clicked" handler="onCancelBtnDlgClicked" object="dlgLinkRecords" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -323,7 +329,9 @@
     <property name="can-focus">False</property>
     <property name="title" translatable="yes">Добавление превилегий</property>
     <property name="modal">True</property>
+    <property name="destroy-with-parent">True</property>
     <property name="type-hint">dialog</property>
+    <property name="deletable">False</property>
     <child internal-child="vbox">
       <object class="GtkBox">
         <property name="can-focus">False</property>
@@ -354,7 +362,7 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
-                <signal name="clicked" handler="onCancelBtn1Clicked" object="dlgPrivilege" swapped="no"/>
+                <signal name="clicked" handler="onCancelBtnDlgClicked" object="dlgPrivilege" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -452,10 +460,13 @@
   <object class="GtkTextBuffer" id="textBufferMainTextArea"/>
   <object class="GtkTextBuffer" id="textbufferMsg"/>
   <object class="GtkMessageDialog" id="dlgMsg">
+    <property name="name">dlgMsg</property>
     <property name="can-focus">False</property>
     <property name="title" translatable="yes">Сообщение</property>
     <property name="modal">True</property>
+    <property name="destroy-with-parent">True</property>
     <property name="type-hint">dialog</property>
+    <property name="deletable">False</property>
     <child internal-child="vbox">
       <object class="GtkBox">
         <property name="can-focus">False</property>
@@ -472,7 +483,7 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
-                <signal name="clicked" handler="onCancelBtn1Clicked" object="dlgMsg" swapped="no"/>
+                <signal name="clicked" handler="onCancelBtnDlgClicked" object="dlgMsg" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -502,127 +513,12 @@
       </object>
     </child>
   </object>
-  <object class="GtkDialog" id="dlgSelect">
-    <property name="can-focus">False</property>
-    <property name="title" translatable="yes">Отображение таблиц</property>
-    <property name="modal">True</property>
-    <property name="destroy-with-parent">True</property>
-    <property name="type-hint">dialog</property>
-    <property name="transient-for">winMain</property>
-    <child internal-child="vbox">
-      <object class="GtkBox">
-        <property name="can-focus">False</property>
-        <property name="orientation">vertical</property>
-        <child internal-child="action_area">
-          <object class="GtkButtonBox">
-            <property name="can-focus">False</property>
-            <property name="hexpand">False</property>
-            <property name="layout-style">end</property>
-            <child>
-              <object class="GtkButton" id="btnOk1">
-                <property name="label" translatable="yes">Ok</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="btnCancel1">
-                <property name="label" translatable="yes">Закрыть</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-                <signal name="clicked" handler="onCancelBtn1Clicked" object="dlgSelect" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButtonBox">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="halign">start</property>
-            <property name="orientation">vertical</property>
-            <property name="homogeneous">True</property>
-            <property name="layout-style">center</property>
-            <child>
-              <object class="GtkRadioButton" id="radioButtonSelectAll">
-                <property name="label" translatable="yes">Отобразить записи
-</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">False</property>
-                <property name="halign">start</property>
-                <property name="active">True</property>
-                <property name="draw-indicator">True</property>
-                <property name="group">radioButtonSelectWithChilds</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkRadioButton" id="radioButtonSelectWithChilds">
-                <property name="label" translatable="yes">Отобразить записи со связанными записями</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">False</property>
-                <property name="active">True</property>
-                <property name="draw-indicator">True</property>
-                <property name="group">radioButtonSelectAll</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkComboBoxText" id="comboBoxTables1">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="halign">start</property>
-            <property name="active">0</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-  </object>
   <object class="GtkWindow" id="winMain">
     <property name="width-request">300</property>
     <property name="height-request">250</property>
     <property name="can-focus">False</property>
     <property name="title" translatable="yes">Справочник архитектур ПК</property>
-    <property name="attached-to">dlgSelect</property>
+    <property name="attached-to">dlgMsg</property>
     <signal name="destroy" handler="onExit" swapped="no"/>
     <child>
       <object class="GtkBox">
@@ -725,6 +621,7 @@
         </child>
         <child>
           <object class="GtkTextView" id="mainTextArea">
+            <property name="name">mainTextArea</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="hscroll-policy">natural</property>
@@ -738,6 +635,109 @@
             <property name="expand">True</property>
             <property name="fill">True</property>
             <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkDialog" id="dlgSelect">
+    <property name="can-focus">False</property>
+    <property name="title" translatable="yes">Отображение таблиц</property>
+    <property name="modal">True</property>
+    <property name="destroy-with-parent">True</property>
+    <property name="type-hint">dialog</property>
+    <property name="deletable">False</property>
+    <property name="transient-for">winMain</property>
+    <child internal-child="vbox">
+      <object class="GtkBox">
+        <property name="can-focus">False</property>
+        <property name="orientation">vertical</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox">
+            <property name="can-focus">False</property>
+            <property name="hexpand">False</property>
+            <property name="layout-style">end</property>
+            <child>
+              <object class="GtkButton" id="btnOk1">
+                <property name="label" translatable="yes">Ok</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <signal name="clicked" handler="onOkBtnSelectClicked" object="dlgSelect" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="btnCancel1">
+                <property name="label" translatable="yes">Закрыть</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <signal name="clicked" handler="onCancelBtnDlgClicked" object="dlgSelect" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkRadioButton" id="radioButtonSelect">
+            <property name="label" translatable="yes">Отобразить записи
+</property>
+            <property name="name">radioBtnSelect</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">False</property>
+            <property name="halign">start</property>
+            <property name="draw-indicator">True</property>
+            <property name="group">radioButtonSelectWithChilds</property>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkRadioButton" id="radioButtonSelectWithChilds">
+            <property name="label" translatable="yes">Отобразить записи со связанными записями</property>
+            <property name="name">radioBtnIsWithChilds</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">False</property>
+            <property name="active">True</property>
+            <property name="draw-indicator">True</property>
+            <property name="group">radioButtonSelect</property>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkComboBoxText" id="comboBoxTables1">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="halign">start</property>
+            <property name="active">0</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
           </packing>
         </child>
       </object>

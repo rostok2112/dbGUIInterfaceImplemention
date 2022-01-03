@@ -1,26 +1,25 @@
 #include "../include/types.h"
 
-
-G_MODULE_EXPORT void onCancelBtnUpdateUpdateClicked(GtkButton * btn, GtkDialog * dlg){
+G_MODULE_EXPORT void onCancelBtnDynDlgClicked(GtkButton * btn, GtkDialog * dlg){
     g_free(g_object_get_data(dlg, "tableName"));
     gtk_widget_destroy(GTK_WIDGET(dlg));
-    }
+}
 
 G_MODULE_EXPORT void onOkBtnUpdateUpdateClicked(GtkButton * btn, GtkDialog * dlg){
 
  GtkBox  * boxMain  = GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)));
 
     selectDB(g_object_get_data(dlg, "tableName"));
-
     MYSQL_FIELD  *field = NULL;
     guchar *setValue = NULL, *buf_ptr  = NULL;
     GList *listChilds = gtk_container_get_children(GTK_CONTAINER(boxMain));
 
 
-    while(listChilds && !GTK_IS_COMBO_BOX_TEXT(listChilds->data), g_strcmp0(gtk_widget_get_name(GTK_WIDGET(listChilds->data)), "ComboRecords"))
+    while(listChilds && (!GTK_IS_COMBO_BOX_TEXT(listChilds->data) && g_strcmp0(gtk_widget_get_name(GTK_WIDGET(listChilds->data)), "ComboRecords")))
             listChilds = listChilds->next;
 
-    guchar * buf1 = gtk_combo_box_text_get_active_text(listChilds->data);
+            if(listChilds){
+             guchar * buf1 = gtk_combo_box_text_get_active_text(listChilds->data);
     buf_ptr = strchr(buf1, ' ') + 1;
     guchar * fieldName = g_strndup(buf1, strchr(buf1, ':') - (char *) buf1);
     guchar * fieldValue = g_strndup(buf_ptr, strchr(buf_ptr, ' ') - (char *) buf_ptr );
@@ -43,7 +42,7 @@ G_MODULE_EXPORT void onOkBtnUpdateUpdateClicked(GtkButton * btn, GtkDialog * dlg
             case FIELD_TYPE_LONG:
                 if(GTK_IS_SPIN_BUTTON(listChilds->data) && i)
                     listChilds = listChilds->next;
-                while(!GTK_IS_SPIN_BUTTON(listChilds->data))
+                while(listChilds && !GTK_IS_SPIN_BUTTON(listChilds->data))
                     listChilds = listChilds->next;
 
                 if(listChilds){
@@ -56,7 +55,7 @@ G_MODULE_EXPORT void onOkBtnUpdateUpdateClicked(GtkButton * btn, GtkDialog * dlg
                 if(field->length == 1){
                     if(GTK_IS_CHECK_BUTTON(listChilds->data) && i)
                         listChilds = listChilds->next;
-                    while(!GTK_IS_CHECK_BUTTON(listChilds->data))
+                    while(listChilds && !GTK_IS_CHECK_BUTTON(listChilds->data))
                         listChilds = listChilds->next;
 
                     if(listChilds){
@@ -70,7 +69,7 @@ G_MODULE_EXPORT void onOkBtnUpdateUpdateClicked(GtkButton * btn, GtkDialog * dlg
                 else {
                     if(GTK_IS_SPIN_BUTTON(listChilds->data) && i)
                         listChilds = listChilds->next;
-                    while(!GTK_IS_SPIN_BUTTON(listChilds->data))
+                    while(listChilds && !GTK_IS_SPIN_BUTTON(listChilds->data))
                         listChilds = listChilds->next;
 
                     if(listChilds){
@@ -85,7 +84,7 @@ G_MODULE_EXPORT void onOkBtnUpdateUpdateClicked(GtkButton * btn, GtkDialog * dlg
                 else {
                    if(GTK_IS_SPIN_BUTTON(listChilds->data) && i)
                     listChilds = listChilds->next;
-                    while(!GTK_IS_SPIN_BUTTON(listChilds->data))
+                    while(listChilds && !GTK_IS_SPIN_BUTTON(listChilds->data))
                         listChilds = listChilds->next;
 
                     if(listChilds){
@@ -102,7 +101,7 @@ G_MODULE_EXPORT void onOkBtnUpdateUpdateClicked(GtkButton * btn, GtkDialog * dlg
 
                 if((GTK_IS_ENTRY(listChilds->data)) && i)
                    listChilds = listChilds->next;
-                while(!GTK_IS_ENTRY(listChilds->data))
+                while(listChilds && !GTK_IS_ENTRY(listChilds->data))
                     listChilds = listChilds->next;
 
                 if(listChilds){
@@ -123,15 +122,15 @@ G_MODULE_EXPORT void onOkBtnUpdateUpdateClicked(GtkButton * btn, GtkDialog * dlg
     g_free(fieldName);
     g_free(fieldValue);
     g_free(g_object_get_data(dlg, "tableName"));
-    mysql_free_result(result);
+            }
+
     gtk_widget_destroy(GTK_WIDGET(dlg));
 
 }
 
 G_MODULE_EXPORT void onOkBtnUpdateClicked(GtkButton * btn, GtkDialog * parentDlg){
 
-
-GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(parentDlg)))));
+    GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(parentDlg)))));
 
     guchar *  tableName = NULL;
     guint  fieldCount = 0;
@@ -161,6 +160,9 @@ GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_ge
                       NULL);
 
     g_free(str_buf1);
+    gtk_window_set_modal(dlg, true);
+    gtk_window_set_destroy_with_parent(dlg, true);
+    gtk_window_set_deletable(dlg, false);
     g_object_set_data(dlg, "tableName", tableName);
     GtkBox  *  boxMain  = GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)));
 
@@ -263,11 +265,11 @@ GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_ge
     }
 
     listChilds  =  gtk_container_get_children(GTK_CONTAINER(GTK_BUTTON_BOX(gtk_dialog_get_action_area(dlg))));
-    if(GTK_IS_BUTTON(listChilds->data) && !g_strcmp0(gtk_label_get_text(gtk_bin_get_child (listChilds->data)), "Ok"))
+    if(GTK_IS_BUTTON(listChilds->data) || !g_strcmp0(gtk_label_get_text(gtk_bin_get_child (listChilds->data)), "Ok"))
         g_signal_connect(GTK_BUTTON(listChilds->data), "clicked", G_CALLBACK(onOkBtnUpdateUpdateClicked), dlg);
     listChilds = listChilds->next;
-    if(GTK_IS_BUTTON(listChilds->data) && !g_strcmp0(gtk_label_get_text(gtk_bin_get_child(listChilds->data)), "Cancel"))
-        g_signal_connect(GTK_BUTTON(listChilds->data), "clicked", G_CALLBACK(onCancelBtnUpdateUpdateClicked), dlg);
+    if(GTK_IS_BUTTON(listChilds->data) || !g_strcmp0(gtk_label_get_text(gtk_bin_get_child(listChilds->data)), "Cancel"))
+        g_signal_connect(GTK_BUTTON(listChilds->data), "clicked", G_CALLBACK(onCancelBtnDynDlgClicked), dlg);
     gtk_widget_hide(parentDlg);
 
     mysql_free_result(result);
@@ -278,9 +280,6 @@ GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_ge
 
 G_MODULE_EXPORT void onMenuItemUpdateClicked(GtkMenuItem * menuItem, GtkDialog * dlg)
 {
-
-    gtk_widget_set_visible(GTK_WIDGET(menuItem), false);
-    gtk_widget_set_visible(GTK_WIDGET(menuItem), true);
 
     gtk_window_set_title(dlg, "Редактирование записей");
     GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)))));
@@ -293,7 +292,8 @@ G_MODULE_EXPORT void onMenuItemUpdateClicked(GtkMenuItem * menuItem, GtkDialog *
         while(listChilds && !GTK_IS_LABEL(listChilds->data) )
             listChilds = listChilds->next;
 
-        gtk_label_set_label(listChilds->data, "Выберите таблицу для редактирования записи:");
+            if(listChilds){
+                gtk_label_set_label(listChilds->data, "Выберите таблицу для редактирования записи:");
         while(listChilds && !GTK_IS_COMBO_BOX_TEXT(listChilds->data) )
             listChilds = listChilds->next;
         if(listChilds) {
@@ -304,11 +304,13 @@ G_MODULE_EXPORT void onMenuItemUpdateClicked(GtkMenuItem * menuItem, GtkDialog *
             for(int cntTable = 0; cntTable < countTables; cntTable++)
                 gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(listChilds->data), mysql_fetch_row(result)[0]);
             mysql_free_result(result);
+            }
+
         }
     }
 
     listChilds = gtk_container_get_children(GTK_CONTAINER(gtk_dialog_get_action_area(dlg)));
-    while(listChilds && !GTK_IS_BUTTON(listChilds->data)  && g_strcmp0(gtk_button_get_label(listChilds->data), "Ok"))
+    while(listChilds && (!GTK_IS_BUTTON(listChilds->data)  || g_strcmp0(gtk_button_get_label(listChilds->data), "Ok")))
         listChilds = listChilds->next;
     if(listChilds) {
         if(g_object_get_data(listChilds->data, "SignalHandler"))
@@ -328,10 +330,6 @@ G_MODULE_EXPORT void onMenuItemUpdateClicked(GtkMenuItem * menuItem, GtkDialog *
 
 }
 
-G_MODULE_EXPORT void onCancelBtnInsertInsertClicked(GtkButton * btn, GtkDialog * dlg){
-    g_free(g_object_get_data(dlg, "tableName"));
-    gtk_widget_destroy(GTK_WIDGET(dlg));
-}
 
 G_MODULE_EXPORT void onOkBtnInsertInsertClicked(GtkButton * btn, GtkDialog * dlg)
 {
@@ -362,7 +360,7 @@ G_MODULE_EXPORT void onOkBtnInsertInsertClicked(GtkButton * btn, GtkDialog * dlg
             case FIELD_TYPE_LONG:
                 if(GTK_IS_SPIN_BUTTON(listChilds->data) && i)
                     listChilds = listChilds->next;
-                while(!GTK_IS_SPIN_BUTTON(listChilds->data))
+                while(listChilds && !GTK_IS_SPIN_BUTTON(listChilds->data))
                     listChilds = listChilds->next;
 
                 if(listChilds){
@@ -375,7 +373,7 @@ G_MODULE_EXPORT void onOkBtnInsertInsertClicked(GtkButton * btn, GtkDialog * dlg
                 if(field->length == 1){
                     if(GTK_IS_CHECK_BUTTON(listChilds->data) && i)
                         listChilds = listChilds->next;
-                    while(!GTK_IS_CHECK_BUTTON(listChilds->data))
+                    while(listChilds && !GTK_IS_CHECK_BUTTON(listChilds->data))
                         listChilds = listChilds->next;
 
                     if(listChilds){
@@ -389,7 +387,7 @@ G_MODULE_EXPORT void onOkBtnInsertInsertClicked(GtkButton * btn, GtkDialog * dlg
                 else {
                     if(GTK_IS_SPIN_BUTTON(listChilds->data) && i)
                         listChilds = listChilds->next;
-                    while(!GTK_IS_SPIN_BUTTON(listChilds->data))
+                    while(listChilds && !GTK_IS_SPIN_BUTTON(listChilds->data))
                         listChilds = listChilds->next;
 
                     if(listChilds){
@@ -404,7 +402,7 @@ G_MODULE_EXPORT void onOkBtnInsertInsertClicked(GtkButton * btn, GtkDialog * dlg
                 else {
                    if(GTK_IS_SPIN_BUTTON(listChilds->data) && i)
                     listChilds = listChilds->next;
-                    while(!GTK_IS_SPIN_BUTTON(listChilds->data))
+                    while(listChilds && !GTK_IS_SPIN_BUTTON(listChilds->data))
                         listChilds = listChilds->next;
 
                     if(listChilds){
@@ -421,7 +419,7 @@ G_MODULE_EXPORT void onOkBtnInsertInsertClicked(GtkButton * btn, GtkDialog * dlg
 
                 if((GTK_IS_ENTRY(listChilds->data)) && i)
                    listChilds = listChilds->next;
-                while(!GTK_IS_ENTRY(listChilds->data))
+                while(listChilds && !GTK_IS_ENTRY(listChilds->data))
                     listChilds = listChilds->next;
 
                 if(listChilds){
@@ -441,7 +439,6 @@ G_MODULE_EXPORT void onOkBtnInsertInsertClicked(GtkButton * btn, GtkDialog * dlg
 
     g_free(values);
     g_free(g_object_get_data(dlg, "tableName"));
-    mysql_free_result(result);
     gtk_widget_destroy(GTK_WIDGET(dlg));
 }
 
@@ -478,6 +475,9 @@ G_MODULE_EXPORT void onOkBtnInsertClicked(GtkButton * btn, GtkDialog * parentDlg
                       NULL);
 
     g_free(bufStr);
+    gtk_window_set_modal(dlg, true);
+    gtk_window_set_destroy_with_parent(dlg, true);
+    gtk_window_set_deletable(dlg, false);
     g_object_set_data(dlg, "tableName", tableName);
     GtkBox  *  boxMain  = GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)));
 
@@ -547,11 +547,11 @@ G_MODULE_EXPORT void onOkBtnInsertClicked(GtkButton * btn, GtkDialog * parentDlg
     }
 
     listChilds  =  gtk_container_get_children(GTK_CONTAINER(GTK_BUTTON_BOX(gtk_dialog_get_action_area(dlg))));
-    if(GTK_IS_BUTTON(listChilds->data) && !g_strcmp0(gtk_label_get_text(gtk_bin_get_child (listChilds->data)), "Ok"))
+    if(GTK_IS_BUTTON(listChilds->data) || !g_strcmp0(gtk_label_get_text(gtk_bin_get_child (listChilds->data)), "Ok"))
         g_signal_connect(GTK_BUTTON(listChilds->data), "clicked", G_CALLBACK(onOkBtnInsertInsertClicked), dlg);
     listChilds = listChilds->next;
-    if(GTK_IS_BUTTON(listChilds->data) && !g_strcmp0(gtk_label_get_text(gtk_bin_get_child(listChilds->data)), "Cancel"))
-        g_signal_connect(GTK_BUTTON(listChilds->data), "clicked", G_CALLBACK(onCancelBtnInsertInsertClicked), dlg);
+    if(GTK_IS_BUTTON(listChilds->data) || !g_strcmp0(gtk_label_get_text(gtk_bin_get_child(listChilds->data)), "Cancel"))
+        g_signal_connect(GTK_BUTTON(listChilds->data), "clicked", G_CALLBACK(onCancelBtnDynDlgClicked), dlg);
     gtk_widget_hide(parentDlg);
     mysql_free_result(result);
     gtk_widget_show_all(dlg);
@@ -561,8 +561,6 @@ G_MODULE_EXPORT void onOkBtnInsertClicked(GtkButton * btn, GtkDialog * parentDlg
 
 G_MODULE_EXPORT void onMenuItemInsertClicked(GtkMenuItem * menuItem, GtkDialog * dlg)
 {
-    gtk_widget_set_visible(GTK_WIDGET(menuItem), false);
-    gtk_widget_set_visible(GTK_WIDGET(menuItem), true);
 
     gtk_window_set_title(dlg, "Добавление записей");
     GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)))));
@@ -575,7 +573,8 @@ G_MODULE_EXPORT void onMenuItemInsertClicked(GtkMenuItem * menuItem, GtkDialog *
 
         while(listChilds && !GTK_IS_LABEL(listChilds->data) )
             listChilds = listChilds->next;
-        gtk_label_set_label(listChilds->data, "Выберите таблицу для добавления записи:");
+            if(listChilds){
+               gtk_label_set_label(listChilds->data, "Выберите таблицу для добавления записи:");
 
         while(listChilds && !GTK_IS_COMBO_BOX_TEXT(listChilds->data) )
             listChilds = listChilds->next;
@@ -587,12 +586,14 @@ G_MODULE_EXPORT void onMenuItemInsertClicked(GtkMenuItem * menuItem, GtkDialog *
             for(int cntTable = 0; cntTable < countTables; cntTable++)
                 gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(listChilds->data), mysql_fetch_row(result)[0]);
             mysql_free_result(result);
+            }
+
         }
     }
 
     listChilds = gtk_container_get_children(GTK_CONTAINER(gtk_dialog_get_action_area(dlg)));
 
-    while(listChilds && !GTK_IS_BUTTON(listChilds->data)  && g_strcmp0(gtk_button_get_label(listChilds->data), "Ok"))
+    while(listChilds && (!GTK_IS_BUTTON(listChilds->data)  || g_strcmp0(gtk_button_get_label(listChilds->data), "Ok")))
         listChilds = listChilds->next;
 
     if(listChilds){
@@ -722,7 +723,7 @@ G_MODULE_EXPORT void onMenuItemPrivilegeClicked(GtkMenuItem * menuItem,  GtkDial
                 MYSQL_FIELD * record_Fields = mysql_fetch_fields(result);
                 for(int cntField = 0; cntField < countFields; cntField++) {
                     str_buf2 = str_buf1;
-                    str_buf1 = str_buf1 = g_strdup_printf("%s%s%s:%s", str_buf1 ? str_buf1 : "", str_buf1 ? ":" : "",record_Fields[cntField].name, row_Record[cntField]);
+                    str_buf1 = g_strdup_printf("%s%s%s:%s", str_buf1 ? str_buf1 : "", str_buf1 ? ":" : "",record_Fields[cntField].name, row_Record[cntField]);
                     g_free(str_buf2);
                 }
                 gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(listChilds->data), str_buf1);
@@ -749,9 +750,9 @@ G_MODULE_EXPORT void onOkBtnLinkRecordsClicked(GtkButton * btn,  GtkDialog *  dl
         listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_GRID(listChilds->data)));
 
         while (listChilds && !GTK_IS_COMBO_BOX_TEXT(listChilds->data))
-
             listChilds = listChilds->next;
 
+            if(listChilds){
         GtkComboBoxText *comboChild= listChilds->data;
 
         do
@@ -759,6 +760,7 @@ G_MODULE_EXPORT void onOkBtnLinkRecordsClicked(GtkButton * btn,  GtkDialog *  dl
                 listChilds = listChilds->next;
         while (listChilds && !GTK_IS_COMBO_BOX_TEXT(listChilds->data));
 
+        if(listChilds){
         GtkComboBoxText *comboParent= listChilds->data;
 
         if(comboChild && comboParent) {
@@ -784,17 +786,19 @@ G_MODULE_EXPORT void onOkBtnLinkRecordsClicked(GtkButton * btn,  GtkDialog *  dl
             g_free(valueFieldParent);
             g_free(valueFieldChild);
         }
+            }
+    }
     }
     hideDlg(dlg);
 }
 G_MODULE_EXPORT void onOkBtnLinkClicked(GtkButton * btn,  GtkDialog *  dlg)
 {
 
-    GtkWidget * dlgPast = btn;
-    while(dlgPast && !GTK_IS_DIALOG(dlgPast))
-        dlgPast =  gtk_widget_get_parent(dlgPast);
+    GtkWidget * dlgParent = btn;
+    while(dlgParent && !GTK_IS_DIALOG(dlgParent))
+        dlgParent =  gtk_widget_get_parent(dlgParent);
 
-    GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(dlgPast)))));
+    GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(dlgParent)))));
 
     while(listChilds && !GTK_IS_BOX(listChilds->data) )
         listChilds = listChilds->next;
@@ -823,6 +827,7 @@ G_MODULE_EXPORT void onOkBtnLinkClicked(GtkButton * btn,  GtkDialog *  dlg)
                 while (listChilds && !GTK_IS_COMBO_BOX_TEXT(listChilds->data))
                     listChilds = listChilds->next;
 
+            if(listChilds){
                 GtkComboBoxText *comboChild= listChilds->data;
 
                 do
@@ -830,6 +835,7 @@ G_MODULE_EXPORT void onOkBtnLinkClicked(GtkButton * btn,  GtkDialog *  dlg)
                         listChilds = listChilds->next;
                 while (listChilds && !GTK_IS_COMBO_BOX_TEXT(listChilds->data));
 
+                if(listChilds){
                 GtkComboBoxText *comboParent= listChilds->data;
 
                 if(comboChild && comboParent) {
@@ -852,7 +858,7 @@ G_MODULE_EXPORT void onOkBtnLinkClicked(GtkButton * btn,  GtkDialog *  dlg)
                         for(int cntField = 0; cntField < countFields; cntField++) {
 
                             str_buf2 = str_buf1;
-                            str_buf1 = str_buf1 = g_strdup_printf("%s%s: %s ", str_buf1 ? str_buf1 : "", record_Fields[cntField].name, row_Record[cntField]);
+                            str_buf1 = g_strdup_printf("%s%s: %s ", str_buf1 ? str_buf1 : "", record_Fields[cntField].name, row_Record[cntField]);
                             g_free(str_buf2);
 
                         }
@@ -882,7 +888,7 @@ G_MODULE_EXPORT void onOkBtnLinkClicked(GtkButton * btn,  GtkDialog *  dlg)
                         for(int cntField = 0; cntField < countFields; cntField++) {
 
                             str_buf2 = str_buf1;
-                            str_buf1 = str_buf1 = g_strdup_printf("%s%s: %s ", str_buf1 ? str_buf1 : "", record_Fields[cntField].name, row_Record[cntField]);
+                            str_buf1 = g_strdup_printf("%s%s: %s ", str_buf1 ? str_buf1 : "", record_Fields[cntField].name, row_Record[cntField]);
                             g_free(str_buf2);
 
                         }
@@ -893,6 +899,8 @@ G_MODULE_EXPORT void onOkBtnLinkClicked(GtkButton * btn,  GtkDialog *  dlg)
                     mysql_free_result(result);
                 }
             }
+            }
+            }
             g_free(linkName);
             g_free(parentName);
             g_free(childName);
@@ -900,14 +908,13 @@ G_MODULE_EXPORT void onOkBtnLinkClicked(GtkButton * btn,  GtkDialog *  dlg)
 
     }
 
-    hideDlg(GTK_DIALOG(dlgPast));
+    hideDlg(GTK_DIALOG(dlgParent));
     showDlg(dlg);
 }
 
 G_MODULE_EXPORT void onMenuItemLinkClicked(GtkMenuItem * menuItem,  GtkDialog *  dlg)
 {
-    gtk_widget_set_visible(GTK_WIDGET(menuItem), false);
-    gtk_widget_set_visible(GTK_WIDGET(menuItem), true);
+
 
     GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)))));
 
@@ -980,8 +987,6 @@ G_MODULE_EXPORT void onOkBtnDeleteClicked(GtkButton * btn,  GtkDialog *  dlg)
 G_MODULE_EXPORT void onMenuItemDeleteClicked(GtkMenuItem * menuItem,  GtkDialog *  dlg)
 {
 
-    gtk_widget_set_visible(GTK_WIDGET(menuItem), false);
-    gtk_widget_set_visible(GTK_WIDGET(menuItem), true);
     gtk_window_set_title(dlg, "Удаление записей");
 
     GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)))));
@@ -995,6 +1000,7 @@ G_MODULE_EXPORT void onMenuItemDeleteClicked(GtkMenuItem * menuItem,  GtkDialog 
 
         while(listChilds && !GTK_IS_LABEL(listChilds->data))
             listChilds = listChilds->next;
+            if(listChilds){
         gtk_label_set_label(listChilds->data, "Выберите таблицу для удаления записи:");
 
         while(listChilds && !GTK_IS_COMBO_BOX_TEXT(listChilds->data) )
@@ -1031,7 +1037,7 @@ G_MODULE_EXPORT void onMenuItemDeleteClicked(GtkMenuItem * menuItem,  GtkDialog 
                     for(int cntField = 0; cntField < countFields; cntField++) {
 
                         str_buf2 = str_buf1;
-                        str_buf1 = str_buf1 = g_strdup_printf("%s%s: %s ", str_buf1, record_Fields[cntField].name, row_Record[cntField]);
+                        str_buf1 = g_strdup_printf("%s%s: %s ", str_buf1, record_Fields[cntField].name, row_Record[cntField]);
                         g_free(str_buf2);
                     }
                     gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(listChilds->data), str_buf1);
@@ -1043,8 +1049,9 @@ G_MODULE_EXPORT void onMenuItemDeleteClicked(GtkMenuItem * menuItem,  GtkDialog 
             mysql_free_result(res_buf);
         }
     }
+    }
     listChilds = gtk_container_get_children(GTK_CONTAINER(gtk_dialog_get_action_area(dlg)));
-    while(listChilds && !GTK_IS_BUTTON(listChilds->data)  && g_strcmp0(gtk_button_get_label(listChilds->data), "Ok"))
+    while(listChilds && (!GTK_IS_BUTTON(listChilds->data)  || g_strcmp0(gtk_button_get_label(listChilds->data), "Ok")))
         listChilds = listChilds->next;
     if(listChilds)
     {
@@ -1073,77 +1080,111 @@ G_MODULE_EXPORT void onAdminMenuClicked(GtkMenuItem * menuItem,  GtkMessageDialo
 }
 
 
-G_MODULE_EXPORT void onOkBtn1Clicked(GtkButton * btn,  Args4EventHandler  **args)
+G_MODULE_EXPORT void onOkBtnSelectClicked(GtkButton * btn,  GtkDialog * dlg)
 {
-    /* arg1  dlgSelect, arg2  radioButtonSelectWithChilds, arg3  comboBoxTables1, arg4  mainTextArea */
+    GtkTextView * mainTextArea  = g_object_get_data(dlg, "mainTextArea");
+    GtkMessageDialog * dlgMsg = g_object_get_data(dlg, "dlgMsg");
+    GtkRadioButton * radioBtnIsWithChilds;
+    GtkComboBoxText * comboTables;
 
-    clear(NULL, (GtkTextView *)(*args)->arg4);
+    GList * listChilds =  gtk_container_get_children(gtk_bin_get_child(dlg));
 
-    GtkTextBuffer * buf  =  gtk_text_view_get_buffer((GtkTextView *)(*args)->arg4);
-    if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON((GtkRadioButton *)(*args)->arg2))) {
-m:        selectDB(gtk_combo_box_text_get_active_text((GtkComboBoxText *)(*args)->arg3));
+    if(listChilds) {
+        while(listChilds && (!GTK_IS_RADIO_BUTTON(listChilds->data) || g_strcmp0(gtk_widget_get_name(listChilds->data), "radioBtnIsWithChilds")))
+            listChilds = listChilds->next;
+        if(listChilds) {
+            radioBtnIsWithChilds = GTK_RADIO_BUTTON(listChilds->data);
+            while(listChilds && !GTK_IS_COMBO_BOX_TEXT(listChilds->data))
+                listChilds = listChilds->next;
 
-        if(mysql_num_rows(result)) {
-            int num_fields = mysql_num_fields(result);
-            MYSQL_ROW row;
-            MYSQL_FIELD *  field;
+            if(listChilds) {
 
-            while((field = mysql_fetch_field(result))) {
-                gtk_text_buffer_insert_at_cursor(buf, field->name, field->name_length);
-                gtk_text_buffer_insert_at_cursor(buf, " ", -1);
-            }
-            gtk_text_buffer_insert_at_cursor(buf, "\n", -1);
+                comboTables  = GTK_COMBO_BOX_TEXT(listChilds->data);
 
-            while ((row = mysql_fetch_row(result))) {
-                for(int i = 0; i < num_fields; i++) {
-                    gtk_text_buffer_insert_at_cursor(buf, row[i] ? row[i] : "NULL", -1);
-                    gtk_text_buffer_insert_at_cursor(buf, " ", -1);
+                clear(NULL, mainTextArea);
+
+                GtkTextBuffer * buf  =  gtk_text_view_get_buffer(mainTextArea);
+                if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radioBtnIsWithChilds))) {
+
+m:                  selectDB(gtk_combo_box_text_get_active_text(comboTables));
+
+                    if(mysql_num_rows(result)) {
+                        int num_fields = mysql_num_fields(result);
+                        MYSQL_ROW row;
+                        MYSQL_FIELD *  field;
+
+                        while((field = mysql_fetch_field(result))) {
+                            gtk_text_buffer_insert_at_cursor(buf, field->name, field->name_length);
+                            gtk_text_buffer_insert_at_cursor(buf, " ", -1);
+                        }
+                        gtk_text_buffer_insert_at_cursor(buf, "\n", -1);
+
+                        while ((row = mysql_fetch_row(result))) {
+                            for(int i = 0; i < num_fields; i++) {
+                                gtk_text_buffer_insert_at_cursor(buf, row[i] ? row[i] : "NULL", -1);
+                                gtk_text_buffer_insert_at_cursor(buf, " ", -1);
+                            }
+                            gtk_text_buffer_insert_at_cursor(buf, "\n", -1);
+                        }
+                    } else gtk_text_buffer_insert_at_cursor(buf, "Записи отсутствуют.\n", -1);
+                } else {
+                    guchar * bufLn = g_strdup_printf("%s\\_%%", gtk_combo_box_text_get_active_text(comboTables));
+                    if(!showTablesLikeNotLikeDB(bufLn, true)) {
+                        g_free(bufLn);
+                        return;
+                    }
+
+                    if(mysql_num_rows(result)) {
+                        guchar * res = NULL;
+                        selectWithChildsDB(gtk_combo_box_text_get_active_text(comboTables),
+                                           &res);
+                        if(res)
+                            gtk_text_buffer_insert_at_cursor(buf, res, -1);
+                        else goto m;
+                    } else {
+                        g_free(bufLn);
+                        mysql_free_result(result);
+
+                        goto m;
+                    }
+                    g_free(bufLn);
                 }
                 gtk_text_buffer_insert_at_cursor(buf, "\n", -1);
+                hideDlg(dlg);
+
             }
-        } else gtk_text_buffer_insert_at_cursor(buf, "Записи отсутствуют.\n", -1);
-    } else {
-        guchar * bufLn = g_strdup_printf("%s\\_%%", gtk_combo_box_text_get_active_text((GtkComboBoxText *)(*args)->arg3));
-        if(!showTablesLikeNotLikeDB(bufLn, true)) {
-            g_free(bufLn);
-            return;
         }
-
-        if(mysql_num_rows(result)) {
-            guchar * res = NULL;
-            selectWithChildsDB(gtk_combo_box_text_get_active_text((GtkComboBoxText *)(*args)->arg3),
-                         &res);
-                        if(res)
-            gtk_text_buffer_insert_at_cursor(buf, res, -1);
-                        else goto m;
-        } else {
-            g_free(bufLn);
-            mysql_free_result(result);
-
-            goto m;
-        }
-        g_free(bufLn);
     }
-    gtk_text_buffer_insert_at_cursor(buf, "\n", -1);
-    hideDlg((GtkDialog *)(*args)->arg1);
+
 }
 
-G_MODULE_EXPORT void onCancelBtn1Clicked(GtkButton * btn, GtkDialog * dlg )
+G_MODULE_EXPORT void onCancelBtnDlgClicked(GtkButton * btn, GtkDialog * dlg )
 {
     hideDlg(dlg);
 }
 
 G_MODULE_EXPORT void onMenuItemSelectClicked(GtkMenuItem * menuItem, GtkDialog * dlg )
 {
-    gtk_widget_set_visible(GTK_WIDGET(menuItem), false);
-    gtk_widget_set_visible(GTK_WIDGET(menuItem), true);
+    GtkWidget * buf = gtk_widget_get_ancestor(menuItem, gtk_window_get_type());
 
-    GList * listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)))));
+    if(buf){
+        if(!g_object_get_data(dlg, "dlgMsg"))
+            g_object_set_data(dlg, "dlgMsg", gtk_window_get_attached_to(buf));
+     GList * listChilds =   gtk_container_get_children(gtk_bin_get_child(buf));
+
+     if(listChilds){
+        while(listChilds && (!GTK_IS_TEXT_VIEW(listChilds->data) || g_strcmp0(gtk_widget_get_name(listChilds->data), "mainTextArea")))
+            listChilds = listChilds->next;
+        if(listChilds){
+
+           if(!g_object_get_data(dlg, "mainTextArea"))
+                g_object_set_data(dlg, "mainTextArea", listChilds->data);
+
+            listChilds = gtk_container_get_children(GTK_CONTAINER(GTK_BOX(gtk_bin_get_child(GTK_BIN(dlg)))));
 
     while(listChilds && !GTK_IS_COMBO_BOX_TEXT(listChilds->data) )
         listChilds = listChilds->next;
     if(listChilds) {
-
         if(!showTablesLikeNotLikeDB("%\\_%", false))
             return;
 
@@ -1154,14 +1195,18 @@ G_MODULE_EXPORT void onMenuItemSelectClicked(GtkMenuItem * menuItem, GtkDialog *
         mysql_free_result(result);
     }
     showDlg(dlg);
+        }
+
+     }
+
+
+    }
+
 }
 
 
 G_MODULE_EXPORT void onMenuItemClicked(GtkMenuItem * menuItem, GtkDialog * dlg )
 {
-    gtk_widget_set_visible(GTK_WIDGET(menuItem), false);
-    gtk_widget_set_visible(GTK_WIDGET(menuItem), true);
-    gtk_menu_item_deselect(menuItem);
     showDlg(dlg);
 }
 
@@ -1191,19 +1236,33 @@ G_MODULE_EXPORT void onExit(GtkWidget * window)
 #define OFFSET_IS_ADMIN OFFSET_PASSWRD + 1
 
 
-G_MODULE_EXPORT void onBtnLoginClicked(GtkButton *btn, Args3EventHandler  **forms)
+G_MODULE_EXPORT void onBtnLoginClicked(GtkButton *btn, GtkWindow * win)
 {
-    /* arg1 form_Login, arg2  form_Pas, arg3 dlgMsg */
 
-    if(! checkUserDB(gtk_entry_get_text( (*forms)->arg1), gtk_entry_get_text( (*forms)->arg2))) {
-        showMsg((*forms)->arg3, "Учетной записи не обнаружено");
+    GtkMessageDialog * dlgMsg = gtk_window_get_attached_to(win);
+    GList * listChilds = gtk_container_get_children(gtk_container_get_children(gtk_bin_get_child(win))->data);
+    GtkEntry * formLogin;
+    GtkEntry * formPass;
 
-        return;
-    }
+    if(listChilds){
+        while(listChilds && ( !GTK_IS_ENTRY(listChilds->data) || g_strcmp0(gtk_widget_get_name(listChilds->data), "formPass")))
+            listChilds = listChilds->next;
+
+            if(listChilds){
+                formPass = GTK_ENTRY(listChilds->data);
+
+                while(listChilds && ( !GTK_IS_ENTRY(listChilds->data) || g_strcmp0(gtk_widget_get_name(listChilds->data), "formLogin")))
+                    listChilds = listChilds->next;
+                if(listChilds){
+                    formLogin = GTK_ENTRY(listChilds->data);
+                    if(!checkUserDB(gtk_entry_get_text(formLogin), gtk_entry_get_text(formPass))) {
+                        showMsg(dlgMsg, "Учетной записи не обнаружено");
+                        return;
+                    }
 
     MYSQL_ROW row = mysql_fetch_row(result);
     if(!row) {
-        showMsg((*forms)->arg3, "Учетной записи не обнаружено");
+        showMsg(dlgMsg, "Учетной записи не обнаружено");
 
         return;
     }
@@ -1211,49 +1270,65 @@ G_MODULE_EXPORT void onBtnLoginClicked(GtkButton *btn, Args3EventHandler  **form
     if(g_ascii_strtoull (row[OFFSET_IS_ADMIN], NULL, 0))
         if(loginUserDB(row[OFFSET_LOGIN], row[OFFSET_PASSWRD], g_ascii_strtoull (row[OFFSET_IS_ADMIN], NULL, 0))) {
             mysql_free_result(result);
-            g_free(*forms);
-            *forms = NULL;
             gtk_window_close(window);
             createWin(&window,"winMain", "resource/winMain.glade");
-            winMainSetEventHandlers();
             gtk_widget_show_all(window);
             return;
         } else
-            showMsg((*forms)->arg3, "Не удалось войти");
+            showMsg(dlgMsg, "Не удалось войти");
 
     else if(loginUserDB(NULL, NULL, 0)) {
         mysql_free_result(result);
-        g_free(*forms);
-        *forms = NULL;
         gtk_window_close(window);
         createWin(&window,"winMain", "resource/winMain.glade");
-        winMainSetEventHandlers();
         gtk_widget_show_all(window);
         return;
     } else
-        showMsg((*forms)->arg3, "Не удалось войти");
+        showMsg(dlgMsg, "Не удалось войти");
 
     mysql_free_result(result);
+                }
+            }
+    }
+
+
 }
 
-G_MODULE_EXPORT void onBtnRegisterClicked(GtkButton *btn, Args3EventHandler **forms)
+G_MODULE_EXPORT void onBtnRegisterClicked(GtkButton *btn, GtkWindow * win)
 {
-    /* arg1 form_Login, arg2  form_Pas, arg3 dlgMsg */
+    GtkMessageDialog * dlgMsg = gtk_window_get_attached_to(win);
+    GList * listChilds = gtk_container_get_children(gtk_container_get_children(gtk_bin_get_child(win))->data);
+    GtkEntry * formLogin;
+    GtkEntry * formPass;
 
-    if(! createNewUserDB(gtk_entry_get_text( (*forms)->arg1), gtk_entry_get_text( (*forms)->arg2), 0)) {
-        showMsg((*forms)->arg3, "Логин занят");
+    if(listChilds){
+        while(listChilds && ( !GTK_IS_ENTRY(listChilds->data) || g_strcmp0(gtk_widget_get_name(listChilds->data), "formPass")))
+            listChilds = listChilds->next;
+
+            if(listChilds){
+                formPass = GTK_ENTRY(listChilds->data);
+
+                while(listChilds && ( !GTK_IS_ENTRY(listChilds->data) || g_strcmp0(gtk_widget_get_name(listChilds->data), "formLogin")))
+                    listChilds = listChilds->next;
+
+                if(listChilds){
+                    formLogin = GTK_ENTRY(listChilds->data);
+
+                        if(! createNewUserDB(gtk_entry_get_text(formLogin), gtk_entry_get_text(formPass), 0)) {
+        showMsg(dlgMsg, "Логин занят");
 
         return;
     }
 
     if(loginUserDB(NULL, NULL, 0)) {
-        g_free(*forms);
-        *forms = NULL;
         gtk_window_close(window);
         createWin(&window,"winMain", "resource/winMain.glade");
-        winMainSetEventHandlers();
         gtk_widget_show_all(window);
         return;
     } else
-        showMsg((*forms)->arg3, "Не удалось войти");
+        showMsg(dlgMsg, "Не удалось войти");
+                }
+
+}
+    }
 }

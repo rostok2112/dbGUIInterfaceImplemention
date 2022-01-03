@@ -29,19 +29,6 @@
          }
 
 
-typedef struct {
-    void * arg1;
-    void * arg2;
-    void * arg3;
-} Args3EventHandler;
-
-typedef struct {
-    void * arg1;
-    void * arg2;
-    void * arg3;
-    void * arg4;
-} Args4EventHandler;
-
 extern bool isAdm;
 extern MYSQL *con;
 extern MYSQL_RES *result;
@@ -50,24 +37,23 @@ extern GtkWidget *window;
 extern GtkDialog *dialog;
 
 G_MODULE_EXPORT void onExit(GtkWidget * );
-G_MODULE_EXPORT void onBtnLoginClicked(GtkButton *, Args3EventHandler **);
-G_MODULE_EXPORT void onBtnRegisterClicked(GtkButton *, Args3EventHandler **);
+G_MODULE_EXPORT void onBtnLoginClicked(GtkButton *, GtkWindow *);
+G_MODULE_EXPORT void onBtnRegisterClicked(GtkButton *, GtkWindow *);
 G_MODULE_EXPORT void clear(GtkMenuItem *, GtkTextView *);
 G_MODULE_EXPORT void onMenuItemClicked(GtkMenuItem *, GtkDialog *);
 G_MODULE_EXPORT void onMenuItemSelectClicked(GtkMenuItem *, GtkDialog *);
-G_MODULE_EXPORT void onCancelBtn1Clicked(GtkButton *, GtkDialog *);
-G_MODULE_EXPORT void onOkBtn1Clicked(GtkButton *,  Args4EventHandler  **);
+G_MODULE_EXPORT void onCancelBtnDlgClicked(GtkButton *, GtkDialog *);
+G_MODULE_EXPORT void onOkBtnSelectClicked(GtkButton *,  GtkDialog *);
 G_MODULE_EXPORT void onAdminMenuClicked(GtkMenuItem *,  GtkMessageDialog *);
 G_MODULE_EXPORT void onMenuItemInsertClicked(GtkMenuItem *, GtkDialog *);
 G_MODULE_EXPORT void onOkBtnInsertClicked(GtkButton *,  GtkDialog *);
 G_MODULE_EXPORT void onOkBtnInsertInsertClicked(GtkButton *, GtkDialog *);
-G_MODULE_EXPORT void onCancelBtnInsertInsertClicked(GtkButton *, GtkDialog *);
 G_MODULE_EXPORT void onMenuItemDeleteClicked(GtkMenuItem *,  GtkDialog *);
 G_MODULE_EXPORT void onOkBtnDeleteClicked(GtkButton *,  GtkDialog *);
 G_MODULE_EXPORT void onMenuItemUpdateClicked(GtkMenuItem *, GtkDialog *);
 G_MODULE_EXPORT void onOkBtnUpdateClicked(GtkButton *,  GtkDialog *);
 G_MODULE_EXPORT void onOkBtnUpdateUpdateClicked(GtkButton *, GtkDialog *);
-G_MODULE_EXPORT void onCancelBtnUpdateUpdateClicked(GtkButton *, GtkDialog *);
+G_MODULE_EXPORT void onCancelBtnDynDlgClicked(GtkButton *, GtkDialog *);
 G_MODULE_EXPORT void onMenuItemLinkClicked(GtkMenuItem *,  GtkDialog *);
 G_MODULE_EXPORT void onOkBtnLinkClicked(GtkButton *,  GtkDialog *);
 G_MODULE_EXPORT void onOkBtnLinkRecordsClicked(GtkButton *,  GtkDialog *);
@@ -79,8 +65,7 @@ void showDlg(GtkDialog *);
 void hideDlg(GtkDialog *);
 void showMsg(GtkMessageDialog *, guchar *);
 
-void winAuthSetEventHandlers(void);
-void winMainSetEventHandlers(void);
+//void winAuthSetEventHandlers(void);
 
 bool createNewUserDB(guchar [], guchar [], bool);
 bool checkUserDB(guchar [], guchar []);

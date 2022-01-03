@@ -23,7 +23,6 @@ int main(int argc, char *argv[])
             CLOSE_WITH_ERR(0,1)
 
             createWin (&window, "winAuthorization", "resource/winAuthorization.glade");
-    winAuthSetEventHandlers();
     gtk_widget_show_all(window);
 
     gtk_main();

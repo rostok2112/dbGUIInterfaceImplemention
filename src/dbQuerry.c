@@ -217,7 +217,7 @@ bool selectWithChildsDB(guchar  nameTable[], guchar ** res)
         guint countParentRows = mysql_num_rows(result);        // num of parent rows that has childs
 
 
-        guint64   *parentIDs   = (guint64 *) malloc(sizeof(guint64 ) *  countParentRows);
+        guint64   *parentIDs   = (guint64 *) g_malloc0(sizeof(guint64 ) *  countParentRows);
 
 
 
@@ -322,6 +322,7 @@ bool selectWithChildsDB(guchar  nameTable[], guchar ** res)
 
             g_free(query);
         }
+        g_free(parentIDs);
     }
     mysql_free_result(res_buf);
     return true;
